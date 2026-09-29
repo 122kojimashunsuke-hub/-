@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>マンション値下げ速報</title>
+  
+  <!-- アプリ・アイコン設定（単一ファイル対応） -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="値下げ速報">
+  <meta name="theme-color" content="#1f2937">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/city.png">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/192/city.png">
+
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 font-sans pb-12 select-none">
+
+  <!-- ヘッダー -->
+  <header class="bg-[#1f2937] text-white pt-10 pb-3 px-4 text-center text-lg font-bold sticky top-0 z-10 shadow">
+    <span id="header-date">2026年9月28日（月）</span>
+  </header>
+
+  <!-- 物件リスト -->
+  <main class="max-w-md mx-auto p-4 space-y-4" id="property-list"></main>
+
+  <script>
+    const properties = [
+      {
+        area: "江東区",
+        elapsedDays: 276,
+        name: "シティタワーズ豊洲ザ・ツイン サウスタワー",
+        spec: "42階 / 54.5㎡ / 1LDK / 北 / 築17年",
+        beforePrice: "11,800万",
+        beforeTsubo: "715.7万/坪",
+        afterPrice: "10,600万",
+        afterTsubo: "643.0万/坪",
+        diffPrice: "-1,200万",
+        diffRate: "(-10.17%)",
+        source: "すみふの仲介ステップ",
+        searchWord: "シティタワーズ豊洲ザ・ツイン サウスタワー すみふの仲介ステップ"
+      },
+      {
+        area: "江東区",
+        elapsedDays: 63,
+        name: "シティタワーズ豊洲ザ・シンボル",
+        spec: "12階 / 60.07㎡ / 2LDK / 北 / 築16年",
+        beforePrice: "11,480万",
+        beforeTsubo: "631.8万/坪",
+        afterPrice: "10,580万",
+        afterTsubo: "582.2万/坪",
+        diffPrice: "-900万",
+        diffRate: "(-7.84%)",
+        source: "ノムコム",
+        searchWord: "シティタワーズ豊洲ザ・シンボル ノムコム"
+      }
+    ];
+
+    const container = document.getElementById('property-list');
+    properties.forEach(item => {
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-2xl shadow-sm border border-gray-200 p-4";
+      card.innerHTML = `
+        <div class="flex justify-between items-center mb-2">
+          <span class="bg-gray-800 text-white text-xs font-semibold px-2.5 py-1 rounded">${item.area}</span>
+          <span class="text-xs text-gray-500 font-medium">経過日数：${item.elapsedDays}日</span>
+        </div>
+        <h2 class="text-lg font-bold text-gray-900 leading-snug mb-1">${item.name}</h2>
+        <p class="text-xs text-gray-500 mb-3">${item.spec}</p>
+        <hr class="border-dashed border-gray-300 my-3">
+        <div class="grid grid-cols-3 gap-2 text-left mb-3">
+          <div>
+            <div class="text-[11px] text-gray-400">改定前</div>
+            <div class="text-base font-bold text-gray-800">${item.beforePrice}</div>
+            <div class="text-[10px] text-gray-500">(${item.beforeTsubo})</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-gray-400">改定後</div>
+            <div class="text-base font-bold text-gray-900 flex items-center">
+              <span class="text-gray-400 text-xs mr-1">→</span>${item.afterPrice}
+            </div>
+            <div class="text-[10px] text-gray-500">(${item.afterTsubo})</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-gray-400">変動額</div>
+            <div class="text-base font-bold text-red-600">${item.diffPrice}</div>
+            <div class="text-[10px] text-red-500">${item.diffRate}</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 mb-3">価格変動を確認したサイト：<span class="font-medium">${item.source}</span></p>
+        <a href="https://www.google.com/search?q=${encodeURIComponent(item.searchWord)}" 
+           target="_blank" rel="noopener noreferrer"
+           class="flex items-center justify-center gap-2 w-full bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2.5 px-3 rounded-lg transition">
+          <i data-lucide="search" class="w-4 h-4"></i>
+          <span class="truncate">「${item.searchWord}」で検索</span>
+        </a>
+      `;
+      container.appendChild(card);
+    });
+    lucide.createIcons();
+  </script>
+</body>
+</html>
