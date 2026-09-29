@@ -19,117 +19,73 @@
 
   <!-- ヘッダー -->
   <header class="bg-[#1f2937] text-white pt-10 pb-3 px-4 text-center sticky top-0 z-20 shadow">
-    <div class="text-xs text-gray-400 font-medium">マンション価格改定チェッカー</div>
-    <div id="header-date" class="text-lg font-bold">2026年9月28日（月）</div>
+    <div class="text-xs text-gray-400 font-medium">港区マンション価格改定チェッカー</div>
+    <div id="header-date" class="text-lg font-bold">読み込み中...</div>
   </header>
 
-  <!-- エリア選択バー（横スクロール可能） -->
+  <!-- 絞り込みタブ（大手仲介4社） -->
   <nav class="bg-white border-b border-gray-200 sticky top-[76px] z-10 px-4 py-2.5 shadow-sm">
-    <div class="max-w-md mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar" id="area-tabs">
-      <!-- JavaScriptでエリアボタンを動的生成 -->
-    </div>
+    <div class="max-w-md mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar" id="filter-tabs"></div>
   </nav>
 
   <!-- 物件リストコンテナ -->
   <main class="max-w-md mx-auto p-4 space-y-4" id="property-list">
-    <!-- 物件カード -->
+    <div class="text-center py-12 text-gray-400 text-sm">最新データを取得中...</div>
   </main>
 
   <script>
-    // サンプルデータ（後ほどPythonの自動更新データと接続します）
-    const allProperties = [
-      {
-        area: "江東区",
-        elapsedDays: 276,
-        name: "シティタワーズ豊洲ザ・ツイン サウスタワー",
-        spec: "42階 / 54.5㎡ / 1LDK / 北 / 築17年",
-        beforePrice: "11,800万",
-        beforeTsubo: "715.7万/坪",
-        afterPrice: "10,600万",
-        afterTsubo: "643.0万/坪",
-        diffPrice: "-1,200万",
-        diffRate: "(-10.17%)",
-        source: "すみふの仲介ステップ",
-        searchWord: "シティタワーズ豊洲ザ・ツイン サウスタワー すみふの仲介ステップ"
-      },
-      {
-        area: "江東区",
-        elapsedDays: 63,
-        name: "シティタワーズ豊洲ザ・シンボル",
-        spec: "12階 / 60.07㎡ / 2LDK / 北 / 築16年",
-        beforePrice: "11,480万",
-        beforeTsubo: "631.8万/坪",
-        afterPrice: "10,580万",
-        afterTsubo: "582.2万/坪",
-        diffPrice: "-900万",
-        diffRate: "(-7.84%)",
-        source: "ノムコム",
-        searchWord: "シティタワーズ豊洲ザ・シンボル ノムコム"
-      },
-      {
-        area: "中央区",
-        elapsedDays: 45,
-        name: "勝どき ザ・タワー",
-        spec: "35階 / 71.20㎡ / 3LDK / 南 / 築10年",
-        beforePrice: "14,500万",
-        beforeTsubo: "673.2万/坪",
-        afterPrice: "13,800万",
-        afterTsubo: "640.7万/坪",
-        diffPrice: "-700万",
-        diffRate: "(-4.83%)",
-        source: "三井のリハウス",
-        searchWord: "勝どき ザ・タワー 三井のリハウス"
-      },
-      {
-        area: "港区",
-        elapsedDays: 110,
-        name: "芝浦アイランド グローヴタワー",
-        spec: "28階 / 65.40㎡ / 2LDK / 東 / 築19年",
-        beforePrice: "12,980万",
-        beforeTsubo: "656.0万/坪",
-        afterPrice: "12,180万",
-        afterTsubo: "615.6万/坪",
-        diffPrice: "-800万",
-        diffRate: "(-6.16%)",
-        source: "ノムコム",
-        searchWord: "芝浦アイランド グローヴタワー ノムコム"
+    let allProperties = [];
+    let currentFilter = "すべて";
+
+    // データの読み込み
+    async function loadData() {
+      try {
+        // キャッシュを防ぐためタイムスタンプを付与
+        const res = await fetch('data.json?t=' + new Date().getTime());
+        const data = await res.json();
+        
+        document.getElementById('header-date').innerText = data.updatedAt;
+        allProperties = data.properties;
+        initTabs();
+        renderCards();
+      } catch (err) {
+        document.getElementById('header-date').innerText = "港区 値下げ速報";
+        document.getElementById('property-list').innerHTML = `
+          <div class="text-center py-12 text-gray-400 text-sm">
+            初回データ生成中です。<br>少々お待ちください。
+          </div>
+        `;
       }
-    ];
+    }
 
-    let currentArea = "すべて";
+    // 仲介会社別フィルタータブ
+    function initTabs() {
+      const tabContainer = document.getElementById('filter-tabs');
+      const sources = ["すべて", "すみふの仲介ステップ", "三井のリハウス", "東急リバブル", "ノムコム"];
 
-    // エリアタブの初期化
-    function initAreaTabs() {
-      const areaTabsContainer = document.getElementById('area-tabs');
-      // ユニークなエリア一覧を抽出
-      const areas = ["すべて", ...new Set(allProperties.map(p => p.area))];
-
-      areaTabsContainer.innerHTML = areas.map(area => `
-        <button onclick="changeArea('${area}')" 
-          id="tab-${area}"
+      tabContainer.innerHTML = sources.map(src => `
+        <button onclick="changeFilter('${src}')" 
           class="px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-            area === currentArea 
+            src === currentFilter 
               ? 'bg-[#18446b] text-white shadow-sm' 
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }">
-          ${area}
+          ${src}
         </button>
       `).join('');
     }
 
-    // エリア切り替え処理
-    function changeArea(area) {
-      currentArea = area;
-      initAreaTabs();
+    function changeFilter(src) {
+      currentFilter = src;
+      initTabs();
       renderCards();
     }
 
-    // カード描画処理
     function renderCards() {
       const container = document.getElementById('property-list');
-      const filtered = currentArea === "すべて" 
+      const filtered = currentFilter === "すべて" 
         ? allProperties 
-        : allProperties.filter(p => p.area === currentArea);
+        : allProperties.filter(p => p.source === currentFilter);
 
       if (filtered.length === 0) {
         container.innerHTML = `
@@ -181,9 +137,7 @@
       lucide.createIcons();
     }
 
-    // 初回実行
-    initAreaTabs();
-    renderCards();
+    loadData();
   </script>
 </body>
 </html>
