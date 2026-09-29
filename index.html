@@ -175,19 +175,28 @@
             </div>
           </div>
           <p class="text-xs text-gray-600 mb-3">価格変動を確認したサイト：<span class="font-medium">${item.source}</span></p>
-          <a href="https://www.google.com/search?q=${encodeURIComponent(item.searchWord)}" 
-             target="_blank" rel="noopener noreferrer"
-             class="flex items-center justify-center gap-2 w-full bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2.5 px-3 rounded-lg transition">
-            <i data-lucide="search" class="w-4 h-4"></i>
-            <span class="truncate">「${item.searchWord}」で検索</span>
-          </a>
+
+          <!-- アクションボタン（検索 ＆ Googleマップ） -->
+          <div class="grid grid-cols-2 gap-2">
+            <a href="https://www.google.com/search?q=${encodeURIComponent(item.searchWord)}" 
+               target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-1.5 bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2.5 px-2 rounded-lg transition text-center shadow-sm">
+              <i data-lucide="search" class="w-3.5 h-3.5 shrink-0"></i>
+              <span class="truncate">サイトで検索</span>
+            </a>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" 
+               target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-1.5 bg-[#0f766e] active:bg-[#115e59] text-white text-xs font-semibold py-2.5 px-2 rounded-lg transition text-center shadow-sm">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i>
+              <span class="truncate">Googleマップ</span>
+            </a>
+          </div>
         </div>
       `).join('');
 
       lucide.createIcons();
     }
 
-    // 初期データを即座に表示し、自動生成ファイルがあれば更新
     async function loadData() {
       initTabs();
       renderCards();
@@ -204,7 +213,7 @@
           }
         }
       } catch (e) {
-        // data.jsonの取得に失敗しても初期表示のまま維持
+        // フォールバック維持
       }
     }
 
