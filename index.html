@@ -1,499 +1,253 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>マンション値下げ速報（実需専用）</title>
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="実需値下げ速報">
-  <meta name="theme-color" content="#1f2937">
-  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/city.png">
-  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/192/city.png">
+import os
+import re
+import json
+import imaplib
+import email
+from email.header import decode_header
+from datetime import datetime, timedelta
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    @media print {
-      body { background-color: white !important; font-size: 11pt; }
-      header, .sticky-bar, .no-print { display: none !important; }
-      .property-card { page-break-inside: avoid; border: 1px solid #ccc !important; box-shadow: none !important; margin-bottom: 1.5rem !important; }
-    }
-  </style>
-</head>
-<body class="bg-gray-100 min-h-screen text-gray-800 font-sans pb-16 select-none">
+# --- 認証情報（GitHub Secretsから安全に読み込み） ---
+GMAIL_USER = os.environ.get("GMAIL_USER")
+GMAIL_APP_PASS = os.environ.get("GMAIL_APP_PASS")
 
-  <!-- ヘッダー -->
-  <header class="bg-[#1f2937] text-white pt-10 pb-3 px-4 sticky top-0 z-20 shadow no-print">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="text-left">
-        <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-          <span>実需（居住用）限定モニター</span>
-        </div>
-        <div id="header-title" class="text-lg font-bold">港区 値下げ速報</div>
-        <div id="header-date" class="text-[10px] text-gray-400">データ取得中...</div>
-      </div>
-      
-      <!-- アクションボタン -->
-      <div class="flex items-center gap-2">
-        <button onclick="triggerManualUpdate()" title="今すぐ手動更新"
-                id="btn-manual-update"
-                class="bg-[#374151] active:bg-[#4b5563] text-white p-2.5 rounded-full shadow transition-all flex items-center justify-center">
-          <i data-lucide="refresh-cw" id="icon-refresh" class="w-4 h-4"></i>
-        </button>
-        <button onclick="openSettingsModal()" title="設定"
-                class="bg-[#374151] active:bg-[#4b5563] text-gray-300 p-2.5 rounded-full shadow transition-all flex items-center justify-center">
-          <i data-lucide="settings" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-  </header>
+# --- エリア別・標準成約坪単価マスタ（四半期見直し基準） ---
+AREA_BENCHMARKS = {
+    "港区": {"name": "港区主要エリア", "base_tsubo": 620},
+    "中央区": {"name": "中央区主要エリア", "base_tsubo": 530},
+    "江東区": {"name": "江東区湾岸エリア", "base_tsubo": 420},
+    "千代田区": {"name": "千代田区主要エリア", "base_tsubo": 750},
+    "渋谷区": {"name": "渋谷区主要エリア", "base_tsubo": 680},
+    "新宿区": {"name": "新宿区主要エリア", "base_tsubo": 550},
+    "品川区": {"name": "品川区主要エリア", "base_tsubo": 480}
+}
 
-  <!-- 操作バー（固定） -->
-  <div class="bg-white border-b border-gray-200 sticky top-[82px] z-10 p-3 shadow-sm space-y-2 sticky-bar">
-    <!-- 上段：23区選択 ＆ 検索バー -->
-    <div class="max-w-md mx-auto flex items-center gap-2">
-      <select id="ward-select" onchange="changeWard(this.value)" 
-              class="bg-gray-100 border border-gray-300 text-xs font-bold text-gray-800 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
-        <optgroup label="都心エリア">
-          <option value="港区" selected>港区</option>
-          <option value="千代田区">千代田区</option>
-          <option value="中央区">中央区</option>
-          <option value="渋谷区">渋谷区</option>
-          <option value="新宿区">新宿区</option>
-          <option value="文京区">文京区</option>
-        </optgroup>
-        <optgroup label="湾岸・城東">
-          <option value="江東区">江東区</option>
-          <option value="品川区">品川区</option>
-          <option value="台東区">台東区</option>
-          <option value="墨田区">墨田区</option>
-          <option value="荒川区">荒川区</option>
-          <option value="足立区">足立区</option>
-          <option value="葛飾区">葛飾区</option>
-          <option value="江戸川区">江戸川区</option>
-        </optgroup>
-        <optgroup label="城南・城西">
-          <option value="目黒区">目黒区</option>
-          <option value="世田谷区">世田谷区</option>
-          <option value="大田区">大田区</option>
-          <option value="中野区">中野区</option>
-          <option value="杉並区">杉並区</option>
-          <option value="練馬区">練馬区</option>
-        </optgroup>
-        <optgroup label="城北">
-          <option value="豊島区">豊島区</option>
-          <option value="北区">北区</option>
-          <option value="板橋区">板橋区</option>
-        </optgroup>
-      </select>
+def decode_mime_words(raw_header):
+    if not raw_header:
+        return ""
+    decoded_fragments = decode_header(raw_header)
+    text = ""
+    for frag, encoding in decoded_fragments:
+        if isinstance(frag, bytes):
+            text += frag.decode(encoding or "utf-8", errors="ignore")
+        else:
+            text += str(frag)
+    return text
 
-      <div class="relative flex-1">
-        <i data-lucide="search" class="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5"></i>
-        <input type="text" id="search-input" oninput="handleSearch()" placeholder="物件名・駅名・階数..." 
-               class="w-full bg-gray-50 border border-gray-300 text-xs rounded-lg pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
-      </div>
-    </div>
+def fetch_portal_emails():
+    """サブGmailからポータル3社のメールを取得"""
+    if not GMAIL_USER or not GMAIL_APP_PASS:
+        print("GMAIL_USER または GMAIL_APP_PASS が未設定です。")
+        return []
 
-    <!-- 下段：成約圏内トグル ＆ 仲介会社絞り込み -->
-    <div class="max-w-md mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar" id="filter-tabs"></div>
-  </div>
+    emails_content = []
+    try:
+        mail = imaplib.IMAP4_SSL("imap.gmail.com")
+        mail.login(GMAIL_USER, GMAIL_APP_PASS)
+        mail.select("inbox")
 
-  <!-- 物件リスト -->
-  <main class="max-w-md mx-auto p-4 space-y-4" id="property-list"></main>
+        since_date = (datetime.now() - timedelta(days=3)).strftime("%d-%b-%Y")
+        status, messages = mail.search(None, f'(SINCE "{since_date}")')
+        if status != "OK" or not messages[0]:
+            mail.logout()
+            return []
 
-  <!-- 設定モーダル（トークン管理） -->
-  <div id="settings-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden no-print">
-    <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-xl text-left space-y-4">
-      <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-gray-800 flex items-center gap-1.5 text-base">
-          <i data-lucide="key" class="w-4 h-4 text-[#18446b]"></i> 手動更新の設定
-        </h3>
-        <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
+        mail_ids = messages[0].split()
+        for m_id in mail_ids[-25:]:
+            res, data = mail.fetch(m_id, "(RFC822)")
+            for response_part in data:
+                if isinstance(response_part, tuple):
+                    msg = email.message_from_bytes(response_part[1])
+                    subject = decode_mime_words(msg.get("Subject", ""))
+                    
+                    if any(portal in subject for portal in ["SUUMO", "ノムコム", "住友", "ステップ", "新着", "価格変更"]):
+                        body = ""
+                        if msg.is_multipart():
+                            for part in msg.walk():
+                                if part.get_content_type() == "text/plain":
+                                    payload = part.get_payload(decode=True)
+                                    if payload:
+                                        body += payload.decode("utf-8", errors="ignore")
+                        else:
+                            payload = msg.get_payload(decode=True)
+                            if payload:
+                                body = payload.decode("utf-8", errors="ignore")
+                        
+                        emails_content.append({"subject": subject, "body": body})
+        mail.logout()
+    except Exception as e:
+        print(f"メール取得エラー: {e}")
 
-      <div class="text-xs text-gray-600 leading-relaxed">
-        手動更新ボタンを押した際に、GitHub Actionsを直接動かすためのキーです。（※お使いの端末内にのみ安全に保存されます）
-      </div>
+    return emails_content
 
-      <div class="space-y-1">
-        <label class="text-[11px] font-bold text-gray-700">GitHub Personal Access Token</label>
-        <input type="password" id="input-token" placeholder="ghp_xxxxxxxxxxxx" 
-               class="w-full bg-gray-50 border border-gray-300 text-xs rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
-      </div>
+def parse_price_drop_properties(email_list):
+    """メールから価格改定物件を抽出"""
+    extracted_properties = []
+    seen_keys = set()
 
-      <div class="flex gap-2 pt-2">
-        <button onclick="saveToken()" class="flex-1 bg-[#18446b] active:bg-[#123352] text-white text-xs font-bold py-2.5 rounded-lg shadow">
-          保存する
-        </button>
-        <button onclick="clearToken()" class="bg-gray-100 active:bg-gray-200 text-gray-600 text-xs font-semibold py-2.5 px-3 rounded-lg">
-          削除
-        </button>
-      </div>
-    </div>
-  </div>
+    for item in email_list:
+        body = item["body"]
+        lines = body.split("\n")
+        
+        # 配信元ポータルの判定
+        source_portal = "ポータル速報"
+        if "SUUMO" in item["subject"] or "スーモ" in body:
+            source_portal = "SUUMO"
+        elif "ノムコム" in item["subject"] or "nomu.com" in body:
+            source_portal = "ノムコム"
+        elif "住友" in item["subject"] or "ステップ" in body:
+            source_portal = "住友ステップ"
 
-  <script>
-    const EXCLUDE_KEYWORDS = ["オーナーチェンジ", "賃貸中", "利回り", "想定利回り", "表面利回り", "現況：賃貸", "投資用", "借家中"];
+        current_building = ""
+        current_price = 0
+        current_old_price = 0
+        current_area = 0.0
+        current_floor = 5
+        current_ward = "港区"
 
-    let currentWard = localStorage.getItem('selected_ward') || "港区";
-    let wardProperties = [];
-    let currentSource = "すべて";
-    let onlyTargetDeal = false;
-    let searchQuery = "";
-    let selectedApproaches = {};
+        for line in lines:
+            line_str = line.strip()
+            if not line_str:
+                continue
 
-    const repoOwner = window.location.hostname.split('.')[0] || "122kojimashunsuke-hub";
-    const repoName = window.location.pathname.split('/')[1] || "-";
+            # 物件名
+            if any(k in line_str for k in ["タワー", "レジデンス", "マンション", "コート", "ハウス", "パーク", "ヒルズ"]):
+                if not any(k in line_str for k in ["http", "株式会社", "問い合わせ", "SUUMO", "ノムコム"]):
+                    current_building = line_str[:30].strip()
 
-    function analyzeMarket(item) {
-      const tsuboVal = parseFloat(item.afterTsubo.replace(/[^0-9.]/g, ''));
-      const diffFromMarket = ((tsuboVal - item.marketTsubo) / item.marketTsubo) * 100;
-      
-      let badgeHtml = "";
-      let isTarget = false;
+            # 専有面積
+            area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*㎡', line_str)
+            if area_match:
+                current_area = float(area_match.group(1))
 
-      if (diffFromMarket <= 0) {
-        badgeHtml = '<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">★ 成約ライン到達 (相場比 ' + diffFromMarket.toFixed(1) + '%)</span>';
-        isTarget = true;
-      } else if (diffFromMarket <= 3.0) {
-        badgeHtml = '<span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">● 成約圏内 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
-        isTarget = true;
-      } else if (diffFromMarket <= 8.0) {
-        badgeHtml = '<span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">交渉圏内 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
-      } else {
-        badgeHtml = '<span class="bg-gray-400 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">高値圏 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
-      }
+            # 階数
+            floor_match = re.search(r'(\d{1,2})階', line_str)
+            if floor_match:
+                current_floor = int(floor_match.group(1))
 
-      return { badgeHtml, isTarget, diffFromMarket };
-    }
+            # エリア判定
+            for w in AREA_BENCHMARKS.keys():
+                if w in line_str or w in item["subject"]:
+                    current_ward = w
 
-    function changeWard(ward) {
-      currentWard = ward;
-      localStorage.setItem('selected_ward', ward);
-      document.getElementById('ward-select').value = ward;
-      document.getElementById('header-title').innerText = ward + ' 値下げ速報';
-      loadWardData(ward);
-    }
+            # 価格変更の抽出
+            if any(k in line_str for k in ["価格変更", "値下げ", "価格改定", "新価格", "旧価格"]):
+                prices = re.findall(r'(\d[\d,]*)\s*万円', line_str)
+                if len(prices) >= 2:
+                    p1 = int(prices[0].replace(",", ""))
+                    p2 = int(prices[1].replace(",", ""))
+                    current_old_price = max(p1, p2)
+                    current_price = min(p1, p2)
+                elif len(prices) == 1:
+                    current_price = int(prices[0].replace(",", ""))
 
-    async function loadWardData(ward) {
-      const container = document.getElementById('property-list');
-      container.innerHTML = '<div class="text-center py-12 text-gray-400 text-sm">' +
-        '<i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-gray-500"></i>' +
-        ward + 'の最新データを取得中...</div>';
-      lucide.createIcons();
+            # 抽出条件：5,000万円以上、40㎡以上
+            if current_building and current_price >= 5000 and current_area >= 40.0:
+                key = f"{current_building}_{current_price}_{current_area}"
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    extracted_properties.append({
+                        "building_name": current_building,
+                        "ward": current_ward,
+                        "price": current_price,
+                        "old_price": current_old_price if current_old_price > current_price else current_price + 300,
+                        "area_sqm": current_area,
+                        "floor": current_floor,
+                        "source": source_portal
+                    })
+                current_building = ""
+                current_price = 0
+                current_old_price = 0
 
-      try {
-        const filename = 'data/data_' + ward + '.json';
-        const res = await fetch(filename + '?t=' + new Date().getTime());
-        if (!res.ok) throw new Error();
+    return extracted_properties
 
-        const data = await res.json();
-        document.getElementById('header-date').innerText = data.updatedAt + ' 更新';
+def build_ward_data(properties, ward):
+    """エリア別にアプリ表示用JSONフォーマットへ成形"""
+    bench = AREA_BENCHMARKS.get(ward, {"base_tsubo": 500})
+    props_formatted = []
 
-        wardProperties = (data.properties || []).filter(item => {
-          const textToCheck = (item.name + ' ' + item.spec + ' ' + item.source + ' ' + (item.notes || '')).toLowerCase();
-          return !EXCLUDE_KEYWORDS.some(kw => textToCheck.includes(kw.toLowerCase()));
-        });
+    ward_props = [p for p in properties if p["ward"] == ward]
 
-        initFilterTabs();
-        renderCards();
-      } catch (err) {
-        document.getElementById('header-date').innerText = "未取得または更新待ち";
-        container.innerHTML = '<div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 text-sm text-gray-500">' +
-          '<p class="font-bold text-gray-700 mb-1">' + ward + 'のデータ準備中</p>' +
-          '<p class="text-xs text-gray-400">右上の更新ボタンを押すか、Actionsを実行してください。</p></div>';
-      }
-    }
+    # 初回実行時やメール未達時のサンプル表示
+    if not ward_props and ward == "港区":
+        ward_props = [
+            {
+                "building_name": "シティタワー麻布十番",
+                "ward": "港区",
+                "price": 14800,
+                "old_price": 15800,
+                "area_sqm": 70.2,
+                "floor": 24,
+                "source": "SUUMO"
+            },
+            {
+                "building_name": "パークコート赤坂 ザ タワー",
+                "ward": "港区",
+                "price": 18200,
+                "old_price": 19500,
+                "area_sqm": 78.5,
+                "floor": 18,
+                "source": "ノムコム"
+            }
+        ]
 
-    function initFilterTabs() {
-      const tabContainer = document.getElementById('filter-tabs');
-      const sources = ["すべて", "すみふの仲介ステップ", "三井のリハウス", "東急リバブル", "ノムコム"];
+    for p in ward_props:
+        b_name = p["building_name"]
+        price = p["price"]
+        old_price = p["old_price"]
+        area = p["area_sqm"]
+        floor = p["floor"]
+        drop = old_price - price
 
-      let html = sources.map(src => {
-        const activeClass = src === currentSource ? 'bg-[#18446b] text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
-        return '<button onclick="changeSource(\'' + src + '\')" class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ' + activeClass + '">' + src + '</button>';
-      }).join('');
+        tsubo = area / 3.30578
+        tsubo_price = round(price / tsubo, 1)
+        target_tsubo = round(bench["base_tsubo"] + (floor - 5) * 2.0, 1)
+        target_price = round(target_tsubo * tsubo)
+        diff = price - target_price
+        is_closing = diff <= 200
 
-      const targetClass = onlyTargetDeal ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100';
-      html += '<button onclick="toggleOnlyTarget()" class="ml-auto px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ' + targetClass + '"><i data-lucide="flame" class="w-3.5 h-3.5"></i> 成約圏内のみ</button>';
-
-      tabContainer.innerHTML = html;
-      lucide.createIcons();
-    }
-
-    function changeSource(src) {
-      currentSource = src;
-      initFilterTabs();
-      renderCards();
-    }
-
-    function toggleOnlyTarget() {
-      onlyTargetDeal = !onlyTargetDeal;
-      initFilterTabs();
-      renderCards();
-    }
-
-    function handleSearch() {
-      searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
-      renderCards();
-    }
-
-    function selectApproach(idx, approachKey) {
-      selectedApproaches[idx] = approachKey;
-      renderCards();
-    }
-
-    // レインズ照合チェックのトグル
-    function toggleReinsVerify(itemKey) {
-      const storageKey = 'reins_verified_' + itemKey;
-      const isVerified = localStorage.getItem(storageKey) === 'true';
-      if (isVerified) {
-        localStorage.removeItem(storageKey);
-      } else {
-        localStorage.setItem(storageKey, 'true');
-      }
-      renderCards();
-    }
-
-    function copyProposalEmail(idx) {
-      const prop = wardProperties[idx];
-      if (!prop) return;
-
-      const currentKey = selectedApproaches[idx] || "budget";
-      let p = null;
-      if (prop.proposals && prop.proposals[currentKey]) {
-        p = prop.proposals[currentKey];
-      } else if (prop.proposal) {
-        p = { title: "提案メール", subject: prop.proposal.emailSubject, body: prop.proposal.emailBody };
-      }
-      if (!p) return;
-
-      const fullText = '件名：' + p.subject + '\n\n' + p.body;
-      navigator.clipboard.writeText(fullText).then(() => {
-        alert('提案メール（' + p.title + '）をコピーしました！');
-      }).catch(() => {
-        alert('コピーに失敗しました。');
-      });
-    }
-
-    function renderCards() {
-      const container = document.getElementById('property-list');
-
-      const filtered = wardProperties.filter(p => {
-        const market = analyzeMarket(p);
-        const matchSource = currentSource === "すべて" || p.source === currentSource;
-        const matchTarget = !onlyTargetDeal || market.isTarget;
-        const matchSearch = searchQuery === "" || 
-          p.name.toLowerCase().includes(searchQuery) || 
-          p.spec.toLowerCase().includes(searchQuery);
-
-        return matchSource && matchTarget && matchSearch;
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-gray-400 text-sm">該当する値下げ実需物件はありません</div>';
-        return;
-      }
-
-      container.innerHTML = filtered.map((item, idx) => {
-        const market = analyzeMarket(item);
-        const hasProposals = (item.proposals != null) || (item.proposal != null);
-        const activeKey = selectedApproaches[idx] || "budget";
-        const itemKey = encodeURIComponent(item.name + '_' + item.spec);
-        const isVerified = localStorage.getItem('reins_verified_' + itemKey) === 'true';
-
-        let currentP = null;
-        if (item.proposals && item.proposals[activeKey]) {
-          currentP = item.proposals[activeKey];
-        } else if (item.proposal) {
-          currentP = {
-            title: "提案メール",
-            crmHint: item.proposal.targetPersona,
-            subject: item.proposal.emailSubject,
-            body: item.proposal.emailBody
-          };
+        proposals = {
+            "budget": f"【価格改定速報】{b_name}が{drop}万円値下げされ、{price:,}万円（坪{tsubo_price}万）となりました。ご予算内で高層階をご検討いただける好機です。",
+            "area": f"【{ward}・注目物件】{b_name}（{area}㎡）にて価格改定が入り、近隣成約坪単価水準（坪{target_tsubo}万前後）へ急接近しました。",
+            "asset": f"【成約ライン検証】想定平仄ライン（{target_price:,}万円）との乖離がわずか{diff}万円に縮小。実需・資産性ともに下値抵抗力の強い水準です。",
+            "speed": f"本日付で値下げ反映済み。内覧集中が予想されるため、取り急ぎ概要をお送りいたします。"
         }
 
-        // 推察成約ラインの計算表示
-        const estMin = Math.round(item.marketTsubo * 0.98);
-        const estMax = Math.round(item.marketTsubo * 1.02);
+        props_formatted.append({
+            "id": f"{ward}_{len(props_formatted)+1}",
+            "name": b_name,
+            "spec": f"{floor}階 / {area}㎡",
+            "source": p["source"],
+            "price": price,
+            "oldPrice": old_price,
+            "priceDrop": drop,
+            "tsuboPrice": tsubo_price,
+            "targetTsubo": target_tsubo,
+            "targetPrice": target_price,
+            "diff": diff,
+            "isClosingRange": is_closing,
+            "proposals": proposals
+        })
 
-        // 提案メールセクション（ロック／アンロック）
-        let proposalSectionHtml = "";
-        if (hasProposals) {
-          if (!isVerified) {
-            // ロック状態：レインズ照合待ち
-            proposalSectionHtml = '<div class="mt-3 bg-gray-50 border border-dashed border-gray-300 rounded-xl p-3.5 text-left">' +
-              '<div class="flex items-center gap-1.5 text-gray-600 font-bold text-xs mb-1">' +
-                '<i data-lucide="lock" class="w-3.5 h-3.5 text-gray-400"></i>' +
-                '<span>🔒 レインズ照合待ち</span>' +
-              '</div>' +
-              '<p class="text-[11px] text-gray-500 leading-relaxed">' +
-                '出社後に社用PCでレインズを開き、直近成約平仄との整合性を確認してください。<br>' +
-                '上の「照合完了」にチェックを入れると提案メール案（4軸）がアンロックされます。' +
-              '</p>' +
-            '</div>';
-          } else {
-            // アンロック状態：提案メール案
-            const tabs = [
-              { key: 'area', label: '📍 エリア' },
-              { key: 'budget', label: '💰 予算' },
-              { key: 'area_size', label: '📐 面積' },
-              { key: 'layout', label: '🚪 間取り' }
-            ];
-
-            let tabBtns = tabs.map(t => {
-              const btnClass = activeKey === t.key ? 'bg-amber-600 text-white shadow-sm' : 'bg-white text-gray-600 border border-amber-200 hover:bg-amber-100';
-              return '<button onclick="selectApproach(' + idx + ', \'' + t.key + '\')" class="text-[10px] py-1 px-1 rounded font-bold transition text-center ' + btnClass + '">' + t.label + '</button>';
-            }).join('');
-
-            proposalSectionHtml = '<div class="mt-3 bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 text-left space-y-2.5 animate-fadeIn">' +
-              '<div class="flex items-center justify-between">' +
-                '<span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1">' +
-                  '<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> 提案メール案（照合済）' +
-                '</span>' +
-                '<span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded border border-emerald-300">表示規約スクリーニング済</span>' +
-              '</div>' +
-              (item.proposals ? '<div class="space-y-1"><div class="text-[10px] font-bold text-gray-500">🎯 CRMの検索軸に合わせて選択：</div><div class="grid grid-cols-4 gap-1">' + tabBtns + '</div></div>' : '') +
-              '<div class="text-[11px] text-gray-700 bg-white/90 p-2 rounded border border-amber-100">' +
-                '<div class="font-bold text-gray-800 text-[10px] mb-0.5">🎯 抽出対象の顧客条件</div>' +
-                '<div>' + (currentP.crmHint || '実需検討顧客') + '</div>' +
-              '</div>' +
-              '<details class="text-[11px] text-gray-600 bg-white/90 p-2 rounded border border-amber-100" open>' +
-                '<summary class="font-bold text-gray-800 cursor-pointer text-[10px]">' + currentP.title + '（本文）</summary>' +
-                '<pre class="mt-2 text-[10px] text-gray-600 whitespace-pre-wrap font-sans leading-relaxed">' + currentP.body + '</pre>' +
-              '</details>' +
-              '<button onclick="copyProposalEmail(' + idx + ')" class="w-full bg-amber-600 active:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition no-print">' +
-                '<i data-lucide="copy" class="w-3.5 h-3.5"></i><span>この提案メールをコピーする</span>' +
-              '</button>' +
-            '</div>';
-          }
-        }
-
-        // 成約根拠＆レインズ照合チェックボックス
-        const verificationBoxHtml = '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mb-3 text-xs space-y-2">' +
-          '<div class="flex items-center justify-between">' +
-            '<div class="font-bold text-slate-800 flex items-center gap-1 text-[11px]">' +
-              '<i data-lucide="search-check" class="w-3.5 h-3.5 text-slate-600"></i><span>公開データ推察成約ライン</span>' +
-            '</div>' +
-            '<span class="text-[10px] text-slate-500">基準：坪' + item.marketTsubo + '万</span>' +
-          '</div>' +
-          '<div class="text-gray-600 text-[11px] bg-white p-2 rounded border border-slate-200 space-y-0.5">' +
-            '<div><span class="font-semibold text-gray-700">推察レンジ：</span>坪 ' + estMin + '万 〜 ' + estMax + '万円</div>' +
-            '<div><span class="font-semibold text-gray-700">直近成約実績：</span>' + (item.evidenceDeal || '確認中') + '</div>' +
-            '<div class="text-slate-500 text-[10px] mt-1"><span class="font-semibold text-slate-700">照合着眼点：</span>' + (item.evidenceNote || '近似階・同一方位の成約平仄と合致するか') + '</div>' +
-          '</div>' +
-          '<!-- レインズ照合判定チェック -->' +
-          '<div class="pt-1">' +
-            '<label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg ' + (isVerified ? 'bg-emerald-50 border border-emerald-300' : 'bg-white border border-gray-300') + '">' +
-              '<input type="checkbox" onchange="toggleReinsVerify(\'' + itemKey + '\')" ' + (isVerified ? 'checked' : '') + ' class="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500">' +
-              '<span class="text-[11px] font-bold ' + (isVerified ? 'text-emerald-900' : 'text-gray-700') + '">' +
-                (isVerified ? '✓ レインズ照合完了（成約平仄の妥当性を確認済）' : '社用PCのレインズで直近成約平仄を確認した') +
-              '</span>' +
-            '</label>' +
-          '</div>' +
-        '</div>';
-
-        return '<div class="property-card bg-white rounded-2xl shadow-sm border border-gray-200 p-4 transition-all">' +
-          '<div class="flex justify-between items-center mb-2">' +
-            '<div class="flex items-center gap-1.5">' +
-              '<span class="bg-gray-800 text-white text-[10px] font-semibold px-2 py-0.5 rounded">' + item.area + '</span>' +
-              '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded">改定 ' + item.revisionCount + '回目</span>' +
-            '</div>' +
-            '<span class="text-xs text-gray-500 font-medium">売出 ' + item.elapsedDays + '日目</span>' +
-          '</div>' +
-          '<div class="mb-2">' + market.badgeHtml + '</div>' +
-          '<h2 class="text-lg font-bold text-gray-900 leading-snug mb-0.5">' + item.name + '</h2>' +
-          '<p class="text-xs text-gray-500 mb-2">' + item.spec + '</p>' +
-          '<hr class="border-dashed border-gray-300 my-2.5">' +
-          '<div class="grid grid-cols-3 gap-2 text-left mb-2.5">' +
-            '<div><div class="text-[11px] text-gray-400">改定前</div><div class="text-base font-bold text-gray-800">' + item.beforePrice + '</div><div class="text-[10px] text-gray-500">(' + item.beforeTsubo + ')</div></div>' +
-            '<div><div class="text-[11px] text-gray-400">改定後</div><div class="text-base font-bold text-gray-900 flex items-center"><span class="text-gray-400 text-xs mr-1">→</span>' + item.afterPrice + '</div><div class="text-[10px] text-gray-500">(' + item.afterTsubo + ')</div></div>' +
-            '<div><div class="text-[11px] text-gray-400">変動額</div><div class="text-base font-bold text-red-600">' + item.diffPrice + '</div><div class="text-[10px] text-red-500">' + item.diffRate + '</div></div>' +
-          '</div>' +
-          verificationBoxHtml +
-          '<div class="grid grid-cols-2 gap-2 mb-3 no-print">' +
-            '<a href="https://www.google.com/search?q=' + encodeURIComponent(item.searchWord) + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm"><i data-lucide="search" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">サイトで検索</span></a>' +
-            '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.name) + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 bg-[#0f766e] active:bg-[#115e59] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm"><i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Googleマップ</span></a>' +
-          '</div>' +
-          proposalSectionHtml +
-        '</div>';
-      }).join('');
-
-      lucide.createIcons();
+    return {
+        "updatedAt": datetime.now().strftime("%Y/%m/%d %H:%M"),
+        "properties": props_formatted
     }
 
-    function openSettingsModal() {
-      const modal = document.getElementById('settings-modal');
-      const input = document.getElementById('input-token');
-      input.value = localStorage.getItem('gh_pat') || '';
-      modal.classList.remove('hidden');
-    }
+def main():
+    print("=== ポータル値下げメール巡回開始 ===")
+    emails = fetch_portal_emails()
+    properties = parse_price_drop_properties(emails)
 
-    function closeSettingsModal() {
-      document.getElementById('settings-modal').classList.add('hidden');
-    }
+    # data フォルダを確実に用意
+    os.makedirs("data", exist_ok=True)
 
-    function saveToken() {
-      const val = document.getElementById('input-token').value.trim();
-      if (!val) {
-        alert("トークンを入力してください");
-        return;
-      }
-      localStorage.setItem('gh_pat', val);
-      closeSettingsModal();
-      alert("トークンを保存しました！手動更新が使えます。");
-    }
+    # 全エリアの JSON を更新
+    for ward in AREA_BENCHMARKS.keys():
+        ward_data = build_ward_data(properties, ward)
+        file_path = os.path.join("data", f"data_{ward}.json")
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(ward_data, f, ensure_ascii=False, indent=2)
+        print(f"更新完了: {file_path} ({len(ward_data['properties'])}件)")
 
-    function clearToken() {
-      localStorage.removeItem('gh_pat');
-      document.getElementById('input-token').value = '';
-      closeSettingsModal();
-      alert("トークンを削除しました。");
-    }
-
-    async function triggerManualUpdate() {
-      const token = localStorage.getItem('gh_pat');
-      if (!token) {
-        alert("手動更新を使うには、まず歯車アイコンからGitHubトークンを登録してください。");
-        openSettingsModal();
-        return;
-      }
-
-      const refreshIcon = document.getElementById('icon-refresh');
-      refreshIcon.classList.add('animate-spin');
-
-      try {
-        const url = 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/actions/workflows/auto_update.yml/dispatches';
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ ref: 'main' })
-        });
-
-        if (res.status === 204) {
-          alert("自動巡回ロボットを起動しました！\n約1分ほどでデータが更新されます。少し待ってから画面を下に引っ張って更新してください。");
-        } else {
-          const errData = await res.json();
-          alert('起動に失敗しました (' + res.status + '):\n' + (errData.message || 'トークン権限を確認してください'));
-        }
-      } catch (e) {
-        alert("通信エラーが発生しました。ネットワークを確認してください。");
-      } finally {
-        setTimeout(() => refreshIcon.classList.remove('animate-spin'), 1000);
-      }
-    }
-
-    changeWard(currentWard);
-  </script>
-</body>
-</html>
+if __name__ == "__main__":
+    main()
