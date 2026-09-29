@@ -408,4 +408,92 @@
             '<span class="text-xs text-gray-500 font-medium">売出 ' + item.elapsedDays + '日目</span>' +
           '</div>' +
           '<div class="mb-2">' + market.badgeHtml + '</div>' +
-  
+          '<h2 class="text-lg font-bold text-gray-900 leading-snug mb-0.5">' + item.name + '</h2>' +
+          '<p class="text-xs text-gray-500 mb-2">' + item.spec + '</p>' +
+          '<hr class="border-dashed border-gray-300 my-2.5">' +
+          '<div class="grid grid-cols-3 gap-2 text-left mb-2.5">' +
+            '<div><div class="text-[11px] text-gray-400">改定前</div><div class="text-base font-bold text-gray-800">' + item.beforePrice + '</div><div class="text-[10px] text-gray-500">(' + item.beforeTsubo + ')</div></div>' +
+            '<div><div class="text-[11px] text-gray-400">改定後</div><div class="text-base font-bold text-gray-900 flex items-center"><span class="text-gray-400 text-xs mr-1">→</span>' + item.afterPrice + '</div><div class="text-[10px] text-gray-500">(' + item.afterTsubo + ')</div></div>' +
+            '<div><div class="text-[11px] text-gray-400">変動額</div><div class="text-base font-bold text-red-600">' + item.diffPrice + '</div><div class="text-[10px] text-red-500">' + item.diffRate + '</div></div>' +
+          '</div>' +
+          verificationBoxHtml +
+          '<div class="grid grid-cols-2 gap-2 mb-3 no-print">' +
+            '<a href="https://www.google.com/search?q=' + encodeURIComponent(item.searchWord) + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm"><i data-lucide="search" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">サイトで検索</span></a>' +
+            '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.name) + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 bg-[#0f766e] active:bg-[#115e59] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm"><i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Googleマップ</span></a>' +
+          '</div>' +
+          proposalSectionHtml +
+        '</div>';
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function openSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      const input = document.getElementById('input-token');
+      input.value = localStorage.getItem('gh_pat') || '';
+      modal.classList.remove('hidden');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    function saveToken() {
+      const val = document.getElementById('input-token').value.trim();
+      if (!val) {
+        alert("トークンを入力してください");
+        return;
+      }
+      localStorage.setItem('gh_pat', val);
+      closeSettingsModal();
+      alert("トークンを保存しました！手動更新が使えます。");
+    }
+
+    function clearToken() {
+      localStorage.removeItem('gh_pat');
+      document.getElementById('input-token').value = '';
+      closeSettingsModal();
+      alert("トークンを削除しました。");
+    }
+
+    async function triggerManualUpdate() {
+      const token = localStorage.getItem('gh_pat');
+      if (!token) {
+        alert("手動更新を使うには、まず歯車アイコンからGitHubトークンを登録してください。");
+        openSettingsModal();
+        return;
+      }
+
+      const refreshIcon = document.getElementById('icon-refresh');
+      refreshIcon.classList.add('animate-spin');
+
+      try {
+        const url = 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/actions/workflows/auto_update.yml/dispatches';
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        });
+
+        if (res.status === 204) {
+          alert("自動巡回ロボットを起動しました！\n約1分ほどでデータが更新されます。少し待ってから画面を下に引っ張って更新してください。");
+        } else {
+          const errData = await res.json();
+          alert('起動に失敗しました (' + res.status + '):\n' + (errData.message || 'トークン権限を確認してください'));
+        }
+      } catch (e) {
+        alert("通信エラーが発生しました。ネットワークを確認してください。");
+      } finally {
+        setTimeout(() => refreshIcon.classList.remove('animate-spin'), 1000);
+      }
+    }
+
+    changeWard(currentWard);
+  </script>
+</body>
+</html>
