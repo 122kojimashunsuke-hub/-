@@ -145,7 +145,6 @@
     let currentSource = "すべて";
     let onlyTargetDeal = false;
     let searchQuery = "";
-    // 各カードごとに選択されている切り口（area, budget, area_size, layout）
     let selectedApproaches = {};
 
     const repoOwner = window.location.hostname.split('.')[0] || "122kojimashunsuke-hub";
@@ -159,48 +158,45 @@
       let isTarget = false;
 
       if (diffFromMarket <= 0) {
-        badgeHtml = `<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">★ 成約ライン到達 (相場比 ${diffFromMarket.toFixed(1)}%)</span>`;
+        badgeHtml = '<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">★ 成約ライン到達 (相場比 ' + diffFromMarket.toFixed(1) + '%)</span>';
         isTarget = true;
       } else if (diffFromMarket <= 3.0) {
-        badgeHtml = `<span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">● 成約圏内 (相場比 +${diffFromMarket.toFixed(1)}%)</span>`;
+        badgeHtml = '<span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">● 成約圏内 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
         isTarget = true;
       } else if (diffFromMarket <= 8.0) {
-        badgeHtml = `<span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">交渉圏内 (相場比 +${diffFromMarket.toFixed(1)}%)</span>`;
+        badgeHtml = '<span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">交渉圏内 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
       } else {
-        badgeHtml = `<span class="bg-gray-400 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">高値圏 (相場比 +${diffFromMarket.toFixed(1)}%)</span>`;
+        badgeHtml = '<span class="bg-gray-400 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">高値圏 (相場比 +' + diffFromMarket.toFixed(1) + '%)</span>';
       }
 
-      return { badgeHtml, isTarget };
+      return { badgeHtml, isTarget, diffFromMarket };
     }
 
     function changeWard(ward) {
       currentWard = ward;
       localStorage.setItem('selected_ward', ward);
       document.getElementById('ward-select').value = ward;
-      document.getElementById('header-title').innerText = `${ward} 値下げ速報`;
+      document.getElementById('header-title').innerText = ward + ' 値下げ速報';
       loadWardData(ward);
     }
 
     async function loadWardData(ward) {
       const container = document.getElementById('property-list');
-      container.innerHTML = `
-        <div class="text-center py-12 text-gray-400 text-sm">
-          <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-gray-500"></i>
-          ${ward}の最新データを取得中...
-        </div>
-      `;
+      container.innerHTML = '<div class="text-center py-12 text-gray-400 text-sm">' +
+        '<i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-gray-500"></i>' +
+        ward + 'の最新データを取得中...</div>';
       lucide.createIcons();
 
       try {
-        const filename = `data/data_${ward}.json`;
-        const res = await fetch(`${filename}?t=${new Date().getTime()}`);
+        const filename = 'data/data_' + ward + '.json';
+        const res = await fetch(filename + '?t=' + new Date().getTime());
         if (!res.ok) throw new Error();
 
         const data = await res.json();
-        document.getElementById('header-date').innerText = `${data.updatedAt} 更新`;
+        document.getElementById('header-date').innerText = data.updatedAt + ' 更新';
 
         wardProperties = (data.properties || []).filter(item => {
-          const textToCheck = `${item.name} ${item.spec} ${item.source} ${item.notes || ''}`.toLowerCase();
+          const textToCheck = (item.name + ' ' + item.spec + ' ' + item.source + ' ' + (item.notes || '')).toLowerCase();
           return !EXCLUDE_KEYWORDS.some(kw => textToCheck.includes(kw.toLowerCase()));
         });
 
@@ -208,12 +204,9 @@
         renderCards();
       } catch (err) {
         document.getElementById('header-date').innerText = "未取得または更新待ち";
-        container.innerHTML = `
-          <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 text-sm text-gray-500">
-            <p class="font-bold text-gray-700 mb-1">${ward}のデータ準備中</p>
-            <p class="text-xs text-gray-400">右上の更新ボタンを押して手動更新するか、毎朝7時の自動巡回をお待ちください。</p>
-          </div>
-        `;
+        container.innerHTML = '<div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 text-sm text-gray-500">' +
+          '<p class="font-bold text-gray-700 mb-1">' + ward + 'のデータ準備中</p>' +
+          '<p class="text-xs text-gray-400">右上の更新ボタンを押すか、Actionsを実行してください。</p></div>';
       }
     }
 
@@ -221,27 +214,13 @@
       const tabContainer = document.getElementById('filter-tabs');
       const sources = ["すべて", "すみふの仲介ステップ", "三井のリハウス", "東急リバブル", "ノムコム"];
 
-      let html = sources.map(src => `
-        <button onclick="changeSource('${src}')" 
-          class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-            src === currentSource 
-              ? 'bg-[#18446b] text-white shadow-sm' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }">
-          ${src}
-        </button>
-      `).join('');
+      let html = sources.map(src => {
+        const activeClass = src === currentSource ? 'bg-[#18446b] text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
+        return '<button onclick="changeSource(\'' + src + '\')" class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ' + activeClass + '">' + src + '</button>';
+      }).join('');
 
-      html += `
-        <button onclick="toggleOnlyTarget()" 
-          class="ml-auto px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
-            onlyTargetDeal 
-              ? 'bg-red-600 text-white shadow-sm' 
-              : 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
-          }">
-          <i data-lucide="flame" class="w-3.5 h-3.5"></i> 成約圏内のみ
-        </button>
-      `;
+      const targetClass = onlyTargetDeal ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100';
+      html += '<button onclick="toggleOnlyTarget()" class="ml-auto px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ' + targetClass + '"><i data-lucide="flame" class="w-3.5 h-3.5"></i> 成約圏内のみ</button>';
 
       tabContainer.innerHTML = html;
       lucide.createIcons();
@@ -269,19 +248,36 @@
       renderCards();
     }
 
+    // レインズ照合チェックのトグル
+    function toggleReinsVerify(itemKey) {
+      const storageKey = 'reins_verified_' + itemKey;
+      const isVerified = localStorage.getItem(storageKey) === 'true';
+      if (isVerified) {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, 'true');
+      }
+      renderCards();
+    }
+
     function copyProposalEmail(idx) {
       const prop = wardProperties[idx];
-      if (!prop || !prop.proposals) return;
+      if (!prop) return;
 
       const currentKey = selectedApproaches[idx] || "budget";
-      const p = prop.proposals[currentKey];
+      let p = null;
+      if (prop.proposals && prop.proposals[currentKey]) {
+        p = prop.proposals[currentKey];
+      } else if (prop.proposal) {
+        p = { title: "提案メール", subject: prop.proposal.emailSubject, body: prop.proposal.emailBody };
+      }
       if (!p) return;
 
-      const fullText = `件名：${p.subject}\n\n${p.body}`;
+      const fullText = '件名：' + p.subject + '\n\n' + p.body;
       navigator.clipboard.writeText(fullText).then(() => {
-        alert(`提案メール（${p.title}）をコピーしました！`);
+        alert('提案メール（' + p.title + '）をコピーしました！');
       }).catch(() => {
-        alert("コピーに失敗しました。");
+        alert('コピーに失敗しました。');
       });
     }
 
@@ -300,147 +296,116 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-12 text-gray-400 text-sm">
-            該当する値下げ実需物件はありません
-          </div>
-        `;
+        container.innerHTML = '<div class="text-center py-12 text-gray-400 text-sm">該当する値下げ実需物件はありません</div>';
         return;
       }
 
       container.innerHTML = filtered.map((item, idx) => {
         const market = analyzeMarket(item);
-        const hasProposals = item.proposals != null;
+        const hasProposals = (item.proposals != null) || (item.proposal != null);
         const activeKey = selectedApproaches[idx] || "budget";
-        const currentProposal = hasProposals ? item.proposals[activeKey] : null;
+        const itemKey = encodeURIComponent(item.name + '_' + item.spec);
+        const isVerified = localStorage.getItem('reins_verified_' + itemKey) === 'true';
 
-        return `
-          <div class="property-card bg-white rounded-2xl shadow-sm border border-gray-200 p-4 transition-all">
-            <div class="flex justify-between items-center mb-2">
-              <div class="flex items-center gap-1.5">
-                <span class="bg-gray-800 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${item.area}</span>
-                <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded">改定 ${item.revisionCount}回目</span>
-              </div>
-              <span class="text-xs text-gray-500 font-medium">売出 ${item.elapsedDays}日目</span>
-            </div>
+        let currentP = null;
+        if (item.proposals && item.proposals[activeKey]) {
+          currentP = item.proposals[activeKey];
+        } else if (item.proposal) {
+          currentP = {
+            title: "提案メール",
+            crmHint: item.proposal.targetPersona,
+            subject: item.proposal.emailSubject,
+            body: item.proposal.emailBody
+          };
+        }
 
-            <div class="mb-2">
-              ${market.badgeHtml}
-            </div>
+        // 推察成約ラインの計算表示
+        const estMin = Math.round(item.marketTsubo * 0.98);
+        const estMax = Math.round(item.marketTsubo * 1.02);
 
-            <h2 class="text-lg font-bold text-gray-900 leading-snug mb-0.5">${item.name}</h2>
-            <p class="text-xs text-gray-500 mb-2">${item.spec}</p>
+        // 提案メールセクション（ロック／アンロック）
+        let proposalSectionHtml = "";
+        if (hasProposals) {
+          if (!isVerified) {
+            // ロック状態：レインズ照合待ち
+            proposalSectionHtml = '<div class="mt-3 bg-gray-50 border border-dashed border-gray-300 rounded-xl p-3.5 text-left">' +
+              '<div class="flex items-center gap-1.5 text-gray-600 font-bold text-xs mb-1">' +
+                '<i data-lucide="lock" class="w-3.5 h-3.5 text-gray-400"></i>' +
+                '<span>🔒 レインズ照合待ち</span>' +
+              '</div>' +
+              '<p class="text-[11px] text-gray-500 leading-relaxed">' +
+                '出社後に社用PCでレインズを開き、直近成約平仄との整合性を確認してください。<br>' +
+                '上の「照合完了」にチェックを入れると提案メール案（4軸）がアンロックされます。' +
+              '</p>' +
+            '</div>';
+          } else {
+            // アンロック状態：提案メール案
+            const tabs = [
+              { key: 'area', label: '📍 エリア' },
+              { key: 'budget', label: '💰 予算' },
+              { key: 'area_size', label: '📐 面積' },
+              { key: 'layout', label: '🚪 間取り' }
+            ];
 
-            <hr class="border-dashed border-gray-300 my-2.5">
+            let tabBtns = tabs.map(t => {
+              const btnClass = activeKey === t.key ? 'bg-amber-600 text-white shadow-sm' : 'bg-white text-gray-600 border border-amber-200 hover:bg-amber-100';
+              return '<button onclick="selectApproach(' + idx + ', \'' + t.key + '\')" class="text-[10px] py-1 px-1 rounded font-bold transition text-center ' + btnClass + '">' + t.label + '</button>';
+            }).join('');
 
-            <div class="grid grid-cols-3 gap-2 text-left mb-2.5">
-              <div>
-                <div class="text-[11px] text-gray-400">改定前</div>
-                <div class="text-base font-bold text-gray-800">${item.beforePrice}</div>
-                <div class="text-[10px] text-gray-500">(${item.beforeTsubo})</div>
-              </div>
-              <div>
-                <div class="text-[11px] text-gray-400">改定後</div>
-                <div class="text-base font-bold text-gray-900 flex items-center">
-                  <span class="text-gray-400 text-xs mr-1">→</span>${item.afterPrice}
-                </div>
-                <div class="text-[10px] text-gray-500">(${item.afterTsubo})</div>
-              </div>
-              <div>
-                <div class="text-[11px] text-gray-400">変動額</div>
-                <div class="text-base font-bold text-red-600">${item.diffPrice}</div>
-                <div class="text-[10px] text-red-500">${item.diffRate}</div>
-              </div>
-            </div>
+            proposalSectionHtml = '<div class="mt-3 bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 text-left space-y-2.5 animate-fadeIn">' +
+              '<div class="flex items-center justify-between">' +
+                '<span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1">' +
+                  '<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> 提案メール案（照合済）' +
+                '</span>' +
+                '<span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded border border-emerald-300">表示規約スクリーニング済</span>' +
+              '</div>' +
+              (item.proposals ? '<div class="space-y-1"><div class="text-[10px] font-bold text-gray-500">🎯 CRMの検索軸に合わせて選択：</div><div class="grid grid-cols-4 gap-1">' + tabBtns + '</div></div>' : '') +
+              '<div class="text-[11px] text-gray-700 bg-white/90 p-2 rounded border border-amber-100">' +
+                '<div class="font-bold text-gray-800 text-[10px] mb-0.5">🎯 抽出対象の顧客条件</div>' +
+                '<div>' + (currentP.crmHint || '実需検討顧客') + '</div>' +
+              '</div>' +
+              '<details class="text-[11px] text-gray-600 bg-white/90 p-2 rounded border border-amber-100" open>' +
+                '<summary class="font-bold text-gray-800 cursor-pointer text-[10px]">' + currentP.title + '（本文）</summary>' +
+                '<pre class="mt-2 text-[10px] text-gray-600 whitespace-pre-wrap font-sans leading-relaxed">' + currentP.body + '</pre>' +
+              '</details>' +
+              '<button onclick="copyProposalEmail(' + idx + ')" class="w-full bg-amber-600 active:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition no-print">' +
+                '<i data-lucide="copy" class="w-3.5 h-3.5"></i><span>この提案メールをコピーする</span>' +
+              '</button>' +
+            '</div>';
+          }
+        }
 
-            <!-- 成約根拠データ（社内・レインズ照合用） -->
-            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mb-3 text-xs space-y-1">
-              <div class="font-bold text-slate-800 flex items-center gap-1 text-[11px] mb-1">
-                <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-slate-600"></i>
-                <span>成約根拠データ（社内・レインズ照合用）</span>
-              </div>
-              <div class="text-gray-600">
-                <span class="font-semibold text-gray-700">直近成約実績：</span>${item.evidenceDeal}
-              </div>
-              <div class="text-gray-600">
-                <span class="font-semibold text-gray-700">実勢レンジ：</span>${item.evidenceRange}
-              </div>
-              <div class="text-[11px] text-slate-600 bg-white p-1.5 rounded border border-slate-200 mt-1">
-                <span class="font-semibold text-slate-700">照合メモ：</span>${item.evidenceNote}
-              </div>
-            </div>
+        // 成約根拠＆レインズ照合チェックボックス
+        const verificationBoxHtml = '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mb-3 text-xs space-y-2">' +
+          '<div class="flex items-center justify-between">' +
+            '<div class="font-bold text-slate-800 flex items-center gap-1 text-[11px]">' +
+              '<i data-lucide="search-check" class="w-3.5 h-3.5 text-slate-600"></i><span>公開データ推察成約ライン</span>' +
+            '</div>' +
+            '<span class="text-[10px] text-slate-500">基準：坪' + item.marketTsubo + '万</span>' +
+          '</div>' +
+          '<div class="text-gray-600 text-[11px] bg-white p-2 rounded border border-slate-200 space-y-0.5">' +
+            '<div><span class="font-semibold text-gray-700">推察レンジ：</span>坪 ' + estMin + '万 〜 ' + estMax + '万円</div>' +
+            '<div><span class="font-semibold text-gray-700">直近成約実績：</span>' + (item.evidenceDeal || '確認中') + '</div>' +
+            '<div class="text-slate-500 text-[10px] mt-1"><span class="font-semibold text-slate-700">照合着眼点：</span>' + (item.evidenceNote || '近似階・同一方位の成約平仄と合致するか') + '</div>' +
+          '</div>' +
+          '<!-- レインズ照合判定チェック -->' +
+          '<div class="pt-1">' +
+            '<label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg ' + (isVerified ? 'bg-emerald-50 border border-emerald-300' : 'bg-white border border-gray-300') + '">' +
+              '<input type="checkbox" onchange="toggleReinsVerify(\'' + itemKey + '\')" ' + (isVerified ? 'checked' : '') + ' class="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500">' +
+              '<span class="text-[11px] font-bold ' + (isVerified ? 'text-emerald-900' : 'text-gray-700') + '">' +
+                (isVerified ? '✓ レインズ照合完了（成約平仄の妥当性を確認済）' : '社用PCのレインズで直近成約平仄を確認した') +
+              '</span>' +
+            '</label>' +
+          '</div>' +
+        '</div>';
 
-            <!-- アクションボタン（Web検索・Map） -->
-            <div class="grid grid-cols-2 gap-2 mb-3 no-print">
-              <a href="https://www.google.com/search?q=${encodeURIComponent(item.searchWord)}" 
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-1.5 bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm">
-                <i data-lucide="search" class="w-3.5 h-3.5 shrink-0"></i>
-                <span class="truncate">サイトで検索</span>
-              </a>
-              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" 
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-1.5 bg-[#0f766e] active:bg-[#115e59] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i>
-                <span class="truncate">Googleマップ</span>
-              </a>
-            </div>
-
-            <!-- 4軸提案メールセクション（成約圏内のみ） -->
-            ${hasProposals ? `
-              <div class="mt-3 bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 text-left space-y-2.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
-                    <i data-lucide="send" class="w-3 h-3 text-amber-700"></i> 本日の提案メール案
-                  </span>
-                  <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded border border-emerald-300">
-                    表示規約スクリーニング済
-                  </span>
-                </div>
-
-                <!-- 4軸切り替えタブ -->
-                <div class="space-y-1">
-                  <div class="text-[10px] font-bold text-gray-500">🎯 CRMの検索軸に合わせて選択：</div>
-                  <div class="grid grid-cols-4 gap-1">
-                    ${[
-                      { key: 'area', label: '📍 エリア' },
-                      { key: 'budget', label: '💰 予算' },
-                      { key: 'area_size', label: '📐 面積' },
-                      { key: 'layout', label: '🚪 間取り' }
-                    ].map(tab => `
-                      <button onclick="selectApproach(${idx}, '${tab.key}')" 
-                              class="text-[10px] py-1 px-1 rounded font-bold transition text-center ${
-                                activeKey === tab.key 
-                                  ? 'bg-amber-600 text-white shadow-sm' 
-                                  : 'bg-white text-gray-600 border border-amber-200 hover:bg-amber-100'
-                              }">
-                        ${tab.label}
-                      </button>
-                    `).join('')}
-                  </div>
-                </div>
-
-                <!-- ターゲット顧客の条件 -->
-                <div class="text-[11px] text-gray-700 bg-white/90 p-2 rounded border border-amber-100">
-                  <div class="font-bold text-gray-800 text-[10px] mb-0.5">🎯 抽出対象の顧客条件</div>
-                  <div>${currentProposal.crmHint}</div>
-                </div>
-
-                <!-- 本文プレビュー -->
-                <details class="text-[11px] text-gray-600 bg-white/90 p-2 rounded border border-amber-100" open>
-                  <summary class="font-bold text-gray-800 cursor-pointer text-[10px]">
-                    ${currentProposal.title}（本文）
-                  </summary>
-                  <pre class="mt-2 text-[10px] text-gray-600 whitespace-pre-wrap font-sans leading-relaxed">${currentProposal.body}</pre>
-                </details>
-
-                <button onclick="copyProposalEmail(${idx})" 
-                        class="w-full bg-amber-600 active:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition no-print">
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                  <span>この提案メールをコピーする</span>
-                </button>
-              </div>
-            ` : ''}
-
-          </div>
+        return '<div class="property-card bg-white rounded-2xl shadow-sm border border-gray-200 p-4 transition-all">' +
+          '<div class="flex justify-between items-center mb-2">' +
+            '<div class="flex items-center gap-1.5">' +
+              '<span class="bg-gray-800 text-white text-[10px] font-semibold px-2 py-0.5 rounded">' + item.area + '</span>' +
+              '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded">改定 ' + item.revisionCount + '回目</span>' +
+            '</div>' +
+            '<span class="text-xs text-gray-500 font-medium">売出 ' + item.elapsedDays + '日目</span>' +
+          '</div>' +
+          '<div class="mb-2">' + market.badgeHtml + '</div>' +
   
