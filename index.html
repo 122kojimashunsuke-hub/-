@@ -18,20 +18,36 @@
 <body class="bg-gray-100 min-h-screen text-gray-800 font-sans pb-16 select-none">
 
   <!-- ヘッダー -->
-  <header class="bg-[#1f2937] text-white pt-10 pb-3 px-4 text-center sticky top-0 z-20 shadow">
-    <div class="flex items-center justify-center gap-1.5 text-xs text-emerald-400 font-medium mb-0.5">
-      <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-      <span>実需（居住用）限定モニター</span>
+  <header class="bg-[#1f2937] text-white pt-10 pb-3 px-4 sticky top-0 z-20 shadow">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="text-left">
+        <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>実需（居住用）限定</span>
+        </div>
+        <div id="header-title" class="text-lg font-bold">港区 値下げ速報</div>
+        <div id="header-date" class="text-[10px] text-gray-400">データ取得中...</div>
+      </div>
+      
+      <!-- アクションボタン（手動更新 ＆ 設定） -->
+      <div class="flex items-center gap-2">
+        <button onclick="triggerManualUpdate()" title="今すぐ手動更新"
+                id="btn-manual-update"
+                class="bg-[#374151] active:bg-[#4b5563] text-white p-2.5 rounded-full shadow transition-all flex items-center justify-center">
+          <i data-lucide="refresh-cw" id="icon-refresh" class="w-4 h-4"></i>
+        </button>
+        <button onclick="openSettingsModal()" title="設定"
+                class="bg-[#374151] active:bg-[#4b5563] text-gray-300 p-2.5 rounded-full shadow transition-all flex items-center justify-center">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
     </div>
-    <div id="header-title" class="text-lg font-bold">港区 値下げ速報</div>
-    <div id="header-date" class="text-[11px] text-gray-400">データ取得中...</div>
   </header>
 
   <!-- 操作バー（固定） -->
   <div class="bg-white border-b border-gray-200 sticky top-[82px] z-10 p-3 shadow-sm space-y-2">
     <!-- 上段：23区選択セレクト ＆ キーワード検索 -->
     <div class="max-w-md mx-auto flex items-center gap-2">
-      <!-- 23区エリア別セレクトボックス -->
       <select id="ward-select" onchange="changeWard(this.value)" 
               class="bg-gray-100 border border-gray-300 text-xs font-bold text-gray-800 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
         <optgroup label="都心エリア">
@@ -67,7 +83,6 @@
         </optgroup>
       </select>
 
-      <!-- 検索バー -->
       <div class="relative flex-1">
         <i data-lucide="search" class="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5"></i>
         <input type="text" id="search-input" oninput="handleSearch()" placeholder="物件名・駅名・階数..." 
@@ -82,8 +97,40 @@
   <!-- 物件リスト -->
   <main class="max-w-md mx-auto p-4 space-y-4" id="property-list"></main>
 
+  <!-- 設定モーダル（トークン管理） -->
+  <div id="settings-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-xl text-left space-y-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-gray-800 flex items-center gap-1.5 text-base">
+          <i data-lucide="key" class="w-4 h-4 text-[#18446b]"></i> 手動更新の設定
+        </h3>
+        <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="text-xs text-gray-600 leading-relaxed">
+        手動更新ボタンを押した際に、GitHub Actionsを直接動かすためのキーです。（※お使いの端末内にのみ安全に保存されます）
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[11px] font-bold text-gray-700">GitHub Personal Access Token</label>
+        <input type="password" id="input-token" placeholder="ghp_xxxxxxxxxxxx" 
+               class="w-full bg-gray-50 border border-gray-300 text-xs rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveToken()" class="flex-1 bg-[#18446b] active:bg-[#123352] text-white text-xs font-bold py-2.5 rounded-lg shadow">
+          保存する
+        </button>
+        <button onclick="clearToken()" class="bg-gray-100 active:bg-gray-200 text-gray-600 text-xs font-semibold py-2.5 px-3 rounded-lg">
+          削除
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // 投資・オーナーチェンジ排除用のブラックリストキーワード
     const EXCLUDE_KEYWORDS = ["オーナーチェンジ", "賃貸中", "利回り", "想定利回り", "表面利回り", "現況：賃貸", "投資用", "借家中"];
 
     let currentWard = localStorage.getItem('selected_ward') || "港区";
@@ -92,7 +139,10 @@
     let onlyTargetDeal = false;
     let searchQuery = "";
 
-    // 成約ライン判定
+    // リポジトリ情報の自動推測
+    const repoOwner = window.location.hostname.split('.')[0] || "122kojimashunsuke-hub";
+    const repoName = window.location.pathname.split('/')[1] || "-";
+
     function analyzeMarket(item) {
       const tsuboVal = parseFloat(item.afterTsubo.replace(/[^0-9.]/g, ''));
       const diffFromMarket = ((tsuboVal - item.marketTsubo) / item.marketTsubo) * 100;
@@ -115,7 +165,6 @@
       return { badgeHtml, isTarget };
     }
 
-    // 区の切り替え（オンデマンド読み込み）
     function changeWard(ward) {
       currentWard = ward;
       localStorage.setItem('selected_ward', ward);
@@ -124,7 +173,6 @@
       loadWardData(ward);
     }
 
-    // 指定した区のJSONデータのみを取得
     async function loadWardData(ward) {
       const container = document.getElementById('property-list');
       container.innerHTML = `
@@ -136,18 +184,13 @@
       lucide.createIcons();
 
       try {
-        // 区別の個別ファイル（data/data_港区.json 等）をフェッチ
         const filename = `data/data_${ward}.json`;
         const res = await fetch(`${filename}?t=${new Date().getTime()}`);
-        
-        if (!res.ok) {
-          throw new Error('File not found');
-        }
+        if (!res.ok) throw new Error();
 
         const data = await res.json();
         document.getElementById('header-date').innerText = `${data.updatedAt} 更新`;
 
-        // 実需専用フィルター：オーナーチェンジ等の投資文言を完全に除外
         wardProperties = (data.properties || []).filter(item => {
           const textToCheck = `${item.name} ${item.spec} ${item.source} ${item.notes || ''}`.toLowerCase();
           return !EXCLUDE_KEYWORDS.some(kw => textToCheck.includes(kw.toLowerCase()));
@@ -156,12 +199,11 @@
         initFilterTabs();
         renderCards();
       } catch (err) {
-        // 個別ファイルが未生成の場合のフォールバック
-        document.getElementById('header-date').innerText = "本日の更新待ち";
+        document.getElementById('header-date').innerText = "未取得または更新待ち";
         container.innerHTML = `
           <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 text-sm text-gray-500">
             <p class="font-bold text-gray-700 mb-1">${ward}のデータ準備中</p>
-            <p class="text-xs text-gray-400">次回の定期自動巡回（毎朝7:00）で自動収集されます。</p>
+            <p class="text-xs text-gray-400">右上の更新ボタンを押して手動更新するか、毎朝7時の自動巡回をお待ちください。</p>
           </div>
         `;
       }
@@ -304,7 +346,73 @@
       lucide.createIcons();
     }
 
-    // 初期化：保存された区を復元して読み込み
+    // --- 設定モーダル ＆ 手動更新トリガー ---
+    function openSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      const input = document.getElementById('input-token');
+      input.value = localStorage.getItem('gh_pat') || '';
+      modal.classList.remove('hidden');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    function saveToken() {
+      const val = document.getElementById('input-token').value.trim();
+      if (!val) {
+        alert("トークンを入力してください");
+        return;
+      }
+      localStorage.setItem('gh_pat', val);
+      closeSettingsModal();
+      alert("トークンを保存しました！手動更新が使えます。");
+    }
+
+    function clearToken() {
+      localStorage.removeItem('gh_pat');
+      document.getElementById('input-token').value = '';
+      closeSettingsModal();
+      alert("トークンを削除しました。");
+    }
+
+    // アプリからGitHub Actionsを実行
+    async function triggerManualUpdate() {
+      const token = localStorage.getItem('gh_pat');
+      if (!token) {
+        alert("手動更新を使うには、まず歯車アイコンからGitHubトークンを登録してください。");
+        openSettingsModal();
+        return;
+      }
+
+      const refreshIcon = document.getElementById('icon-refresh');
+      refreshIcon.classList.add('animate-spin');
+
+      try {
+        const url = `https://api.github.com/repos/${repoOwner}/${repoName}/actions/workflows/auto_update.yml/dispatches`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        });
+
+        if (res.status === 204) {
+          alert("自動巡回ロボットを起動しました！\n約1分ほどでデータが更新されます。少し待ってから画面を下に引っ張って更新してください。");
+        } else {
+          const errData = await res.json();
+          alert(`起動に失敗しました (${res.status}):\n${errData.message || 'トークン権限を確認してください'}`);
+        }
+      } catch (e) {
+        alert("通信エラーが発生しました。ネットワークを確認してください。");
+      } finally {
+        setTimeout(() => refreshIcon.classList.remove('animate-spin'), 1000);
+      }
+    }
+
     changeWard(currentWard);
   </script>
 </body>
