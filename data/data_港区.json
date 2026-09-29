@@ -1,0 +1,54 @@
+{
+  "ward": "港区",
+  "updatedAt": "2026年9月29日（Tue）",
+  "properties": [
+    {
+      "area": "港区",
+      "elapsedDays": 110,
+      "revisionCount": 2,
+      "marketTsubo": 620.0,
+      "name": "芝浦アイランド グローヴタワー",
+      "spec": "28階 / 65.40㎡ / 2LDK / 東 / 築19年",
+      "beforePrice": "12,980万",
+      "beforeTsubo": "656.1万/坪",
+      "afterPrice": "12,180万",
+      "afterTsubo": "615.7万/坪",
+      "diffPrice": "-800万",
+      "diffRate": "(-6.16%)",
+      "source": "ノムコム",
+      "searchWord": "芝浦アイランド グローヴタワー ノムコム"
+    },
+    {
+      "area": "港区",
+      "elapsedDays": 42,
+      "revisionCount": 3,
+      "marketTsubo": 430.0,
+      "name": "シティタワー品川",
+      "spec": "31階 / 84.14㎡ / 3LDK / 南東 / 築18年",
+      "beforePrice": "11,500万",
+      "beforeTsubo": "451.8万/坪",
+      "afterPrice": "10,800万",
+      "afterTsubo": "424.3万/坪",
+      "diffPrice": "-700万",
+      "diffRate": "(-6.09%)",
+      "source": "すみふの仲介ステップ",
+      "searchWord": "シティタワー品川 すみふの仲介ステップ"
+    },
+    {
+      "area": "港区",
+      "elapsedDays": 85,
+      "revisionCount": 1,
+      "marketTsubo": 900.0,
+      "name": "パークコート赤坂 ザ タワー",
+      "spec": "15階 / 58.20㎡ / 1LDK / 西 / 築17年",
+      "beforePrice": "17,800万",
+      "beforeTsubo": "1011.0万/坪",
+      "afterPrice": "16,800万",
+      "afterTsubo": "954.2万/坪",
+      "diffPrice": "-1,000万",
+      "diffRate": "(-5.62%)",
+      "source": "三井のリハウス",
+      "searchWord": "パークコート赤坂 ザ タワー 三井のリハウス"
+    }
+  ]
+}

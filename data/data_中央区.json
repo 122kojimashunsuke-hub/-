@@ -1,0 +1,38 @@
+{
+  "ward": "中央区",
+  "updatedAt": "2026年9月29日（Tue）",
+  "properties": [
+    {
+      "area": "中央区",
+      "elapsedDays": 68,
+      "revisionCount": 2,
+      "marketTsubo": 650.0,
+      "name": "勝どき ザ・タワー",
+      "spec": "35階 / 71.20㎡ / 3LDK / 南 / 築10年",
+      "beforePrice": "14,500万",
+      "beforeTsubo": "673.2万/坪",
+      "afterPrice": "13,800万",
+      "afterTsubo": "640.7万/坪",
+      "diffPrice": "-700万",
+      "diffRate": "(-4.83%)",
+      "source": "三井のリハウス",
+      "searchWord": "勝どき ザ・タワー 三井のリハウス"
+    },
+    {
+      "area": "中央区",
+      "elapsedDays": 35,
+      "revisionCount": 1,
+      "marketTsubo": 720.0,
+      "name": "パークタワー勝どき サウス",
+      "spec": "19階 / 60.50㎡ / 2LDK / 北東 / 築2年",
+      "beforePrice": "14,200万",
+      "beforeTsubo": "775.9万/坪",
+      "afterPrice": "13,480万",
+      "afterTsubo": "736.6万/坪",
+      "diffPrice": "-720万",
+      "diffRate": "(-5.07%)",
+      "source": "東急リバブル",
+      "searchWord": "パークタワー勝どき サウス 東急リバブル"
+    }
+  ]
+}
