@@ -162,7 +162,7 @@ MASTER_DATA = [
 
 def main():
     os.makedirs("data", exist_ok=True)
-    wards = ["港区", "中央区", "江東区", "千代田区", "渋谷区", "新宿区"]
+    wards = ["港区", "中央区", "江東区", "千代田区", "渋谷区", "新宿区", "北区"]
 
     for ward in wards:
         ward_items = []
