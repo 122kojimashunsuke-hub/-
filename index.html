@@ -139,7 +139,6 @@
     let onlyTargetDeal = false;
     let searchQuery = "";
 
-    // リポジトリ情報の自動推測
     const repoOwner = window.location.hostname.split('.')[0] || "122kojimashunsuke-hub";
     const repoName = window.location.pathname.split('/')[1] || "-";
 
@@ -288,7 +287,7 @@
                 <span class="bg-gray-800 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${item.area}</span>
                 <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded">改定 ${item.revisionCount}回目</span>
               </div>
-              <span class="text-xs text-gray-500 font-medium">経過日数：${item.elapsedDays}日</span>
+              <span class="text-xs text-gray-500 font-medium">売出 ${item.elapsedDays}日目</span>
             </div>
 
             <div class="mb-2">
@@ -346,7 +345,6 @@
       lucide.createIcons();
     }
 
-    // --- 設定モーダル ＆ 手動更新トリガー ---
     function openSettingsModal() {
       const modal = document.getElementById('settings-modal');
       const input = document.getElementById('input-token');
@@ -376,7 +374,6 @@
       alert("トークンを削除しました。");
     }
 
-    // アプリからGitHub Actionsを実行
     async function triggerManualUpdate() {
       const token = localStorage.getItem('gh_pat');
       if (!token) {
