@@ -23,13 +23,13 @@
       <div class="text-left">
         <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
           <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-          <span>実需（居住用）限定</span>
+          <span>実需（居住用）限定モニター</span>
         </div>
         <div id="header-title" class="text-lg font-bold">港区 値下げ速報</div>
         <div id="header-date" class="text-[10px] text-gray-400">データ取得中...</div>
       </div>
       
-      <!-- アクションボタン（手動更新 ＆ 設定） -->
+      <!-- アクションボタン -->
       <div class="flex items-center gap-2">
         <button onclick="triggerManualUpdate()" title="今すぐ手動更新"
                 id="btn-manual-update"
@@ -46,7 +46,7 @@
 
   <!-- 操作バー（固定） -->
   <div class="bg-white border-b border-gray-200 sticky top-[82px] z-10 p-3 shadow-sm space-y-2">
-    <!-- 上段：23区選択セレクト ＆ キーワード検索 -->
+    <!-- 上段：23区選択 ＆ 検索バー -->
     <div class="max-w-md mx-auto flex items-center gap-2">
       <select id="ward-select" onchange="changeWard(this.value)" 
               class="bg-gray-100 border border-gray-300 text-xs font-bold text-gray-800 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-[#18446b]">
@@ -255,6 +255,19 @@
       renderCards();
     }
 
+    // メール文面コピー
+    function copyProposalEmail(idx) {
+      const prop = wardProperties[idx];
+      if (!prop || !prop.proposal) return;
+
+      const fullText = `件名：${prop.proposal.emailSubject}\n\n${prop.proposal.emailBody}`;
+      navigator.clipboard.writeText(fullText).then(() => {
+        alert("提案メール（規約スクリーニング済）をコピーしました！\nメールアプリやLINEに貼り付けて送信できます。");
+      }).catch(() => {
+        alert("コピーに失敗しました。");
+      });
+    }
+
     function renderCards() {
       const container = document.getElementById('property-list');
 
@@ -278,8 +291,10 @@
         return;
       }
 
-      container.innerHTML = filtered.map(item => {
+      container.innerHTML = filtered.map((item, idx) => {
         const market = analyzeMarket(item);
+        const hasProposal = item.proposal != null;
+
         return `
           <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 transition-all">
             <div class="flex justify-between items-center mb-2">
@@ -324,7 +339,8 @@
               <span>相場基準：約${item.marketTsubo}万/坪</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <!-- アクションボタン -->
+            <div class="grid grid-cols-2 gap-2 mb-3">
               <a href="https://www.google.com/search?q=${encodeURIComponent(item.searchWord)}" 
                  target="_blank" rel="noopener noreferrer"
                  class="flex items-center justify-center gap-1.5 bg-[#18446b] active:bg-[#123352] text-white text-xs font-semibold py-2 px-2 rounded-lg transition text-center shadow-sm">
@@ -338,6 +354,39 @@
                 <span class="truncate">Googleマップ</span>
               </a>
             </div>
+
+            <!-- 提案メール生成セクション（成約圏内のみ） -->
+            ${hasProposal ? `
+              <div class="mt-3 bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 text-left space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
+                    <i data-lucide="send" class="w-3 h-3 text-amber-700"></i> 本日の提案メール案
+                  </span>
+                  <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded border border-emerald-300">
+                    表示規約スクリーニング済
+                  </span>
+                </div>
+
+                <div class="text-[11px] text-gray-700 bg-white/80 p-2 rounded border border-amber-100">
+                  <div class="font-bold text-gray-800 text-[10px] mb-0.5">🎯 おすすめ顧客層</div>
+                  <div>${item.proposal.targetPersona}</div>
+                </div>
+
+                <details class="text-[11px] text-gray-600 bg-white/80 p-2 rounded border border-amber-100">
+                  <summary class="font-bold text-gray-800 cursor-pointer text-[10px]">
+                    本文プレビュー（タップして展開）
+                  </summary>
+                  <pre class="mt-2 text-[10px] text-gray-600 whitespace-pre-wrap font-sans leading-relaxed">${item.proposal.emailBody}</pre>
+                </details>
+
+                <button onclick="copyProposalEmail(${idx})" 
+                        class="w-full bg-amber-600 active:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span>提案メールをコピーする</span>
+                </button>
+              </div>
+            ` : ''}
+
           </div>
         `;
       }).join('');
