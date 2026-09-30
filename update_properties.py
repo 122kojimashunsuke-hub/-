@@ -171,10 +171,9 @@ def extract_properties_with_gemini(email_item, api_key):
 {email_item['text'][:6000]}
 """
 
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
     headers = {
-        "Content-Type": "application/json",
-        "x-goog-api-key": api_key
+        "Content-Type": "application/json"
     }
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
