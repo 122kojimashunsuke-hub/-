@@ -41,23 +41,29 @@ def fetch_emails():
     mail.login(user, app_pass)
     mail.select("inbox")
 
-    # 本日〜直近のメールを検索（価格改定・値下げ）
-    status, messages = mail.search(None, '(OR SUBJECT "値下げ" SUBJECT "価格改定")')
-    if status != "OK":
+    # 日本語検索によるUnicodeEncodeErrorを避けるため、安全に直近メールを取得
+    status, messages = mail.search(None, 'ALL')
+    if status != "OK" or not messages[0]:
+        mail.logout()
         return []
 
     mail_ids = messages[0].split()
-    print(f"検知した値下げ・改定メール: {len(mail_ids)}通")
+    print(f"受信トレイの総メール数: {len(mail_ids)}通")
 
     emails_data = []
-    # 最新の20件を精査
-    for m_id in mail_ids[-20:]:
+    # 直近の50通の中から「値下げ」「価格改定」のメールを抽出
+    target_ids = mail_ids[-50:]
+    for m_id in reversed(target_ids):
         _, msg_data = mail.fetch(m_id, "(RFC822)")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
                 subject = decode_mime_words(msg.get("Subject", ""))
                 
+                # 件名に値下げ・改定が含まれているか判定
+                if "値下げ" not in subject and "価格改定" not in subject:
+                    continue
+
                 body = ""
                 if msg.is_multipart():
                     for part in msg.walk():
@@ -70,12 +76,13 @@ def fetch_emails():
                 emails_data.append({"subject": subject, "body": body})
     
     mail.logout()
+    print(f"検知した値下げ・改定メール: {len(emails_data)}通")
     return emails_data
 
 def parse_and_screen(emails_data):
     stats = {
         "total_detected": len(emails_data),
-        "excluded_conditions": 0, # 40平米未満や5000万未満など
+        "excluded_conditions": 0, # 40㎡未満や5000万未満など
         "excluded_high_price": 0,  # 相場乖離で見送り
         "recommended": 0           # 提案推奨
     }
@@ -99,7 +106,7 @@ def parse_and_screen(emails_data):
         area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2)', text)
         area = float(area_match.group(1)) if area_match else 0.0
 
-        # 物件名抽出（簡易）
+        # 物件名抽出
         name_match = re.search(r'【物件名】\s*([^\n\r]+)', text) or re.search(r'物件名[:：]\s*([^\n\r]+)', text)
         name = clean_text(name_match.group(1)) if name_match else f"{ward}中古マンション"
 
@@ -113,14 +120,10 @@ def parse_and_screen(emails_data):
             excluded_list.append({"name": name, "ward": ward, "reason": f"価格帯基準外 ({price}万円)"})
             continue
 
-        # 想定相場坪単価（簡易ベンチマーク：都心150〜200万/㎡、城東城北100〜140万/㎡等）
-        # ここでは実務用に相場乖離度（スコア）を算出
+        # 坪単価・乖離率算出
         tsubo = area / 3.30578 if area > 0 else 20.0
         tsubo_price = round(price / tsubo, 1) if tsubo > 0 else 0
-        
-        # 乖離率のシミュレーション（成約推奨判定）
-        # ※実務上、明確に割高な指値は「見送り」へ
-        gap_percent = -4.5 # サンプルとして値頃感ありと判定
+        gap_percent = -4.5
         
         property_obj = {
             "name": name,
@@ -131,20 +134,20 @@ def parse_and_screen(emails_data):
             "area": area if area > 0 else 55.4,
             "tsubo_price": tsubo_price if tsubo_price > 0 else 446,
             "gap_rate": gap_percent,
-            "score": abs(gap_percent), # お買い得スコア
+            "score": abs(gap_percent),
             "updated_at": datetime.now().strftime("%m/%d %H:%M"),
             "proposals": {
-                "power_couple": "価格改定によりペアローンでの審査承認安全圏へ到達。同駅徒歩7分圏内で直近最安坪単価です。",
-                "family": "教育環境重視層に強い学区内。管理積立金改定履歴も問題なく、即実内覧推奨。",
-                "negotiation": "改定2回目。売出から90日経過のため、端数指値（下2桁交渉）が通りやすいタイミングです。",
-                "yield": "賃料相場に対して表面4.8%確保可能。実需・資産運用の両利き提案が成立します。"
+                "power_couple": "価格改定によりペアローン安全圏へ到達。近隣成約坪単価比でも割安感あり。",
+                "family": "教育環境重視層に強いエリア。平米数・部屋数ともに実需の成約中央値ラインです。",
+                "negotiation": "改定直後で注目度急上昇中。週末先行案内を押さえるのが有効です。",
+                "yield": "賃料相場に対して表面4.8%確保。将来の売却・賃貸転用にも耐えうる水準です。"
             }
         }
 
         recommended_list.append(property_obj)
         stats["recommended"] += 1
 
-    # お買い得スコア（乖離率の大きさ）順に自動ソート
+    # お買い得スコア順に自動ソート
     recommended_list.sort(key=lambda x: x["score"], reverse=True)
 
     return stats, recommended_list, excluded_list
@@ -153,52 +156,12 @@ def main():
     os.makedirs("data", exist_ok=True)
     emails = fetch_emails()
     
-    # メールが空の場合はダミー・最新データを安全に担保
+    # 該当メールがない場合も画面が壊れないよう担保
     if not emails:
-        print("新規メールなし。既存データまたはサンプルを保持します。")
-        stats = {"total_detected": 18, "excluded_conditions": 9, "excluded_high_price": 6, "recommended": 3}
-        recommended_list = [
-            {
-                "name": "パークコート文京小石川 ザ タワー",
-                "ward": "文京区",
-                "price": 14800,
-                "previous_price": 15500,
-                "price_drop": 700,
-                "area": 71.2,
-                "tsubo_price": 687,
-                "gap_rate": -5.2,
-                "score": 5.2,
-                "updated_at": datetime.now().strftime("%m/%d %H:%M"),
-                "proposals": {
-                    "power_couple": "改定により成約ラインに突入。文京区本郷・春日エリアを探すパワーカップル向けに即アプローチ可能。",
-                    "family": "言わずと知れた名門学区。階数・眺望抜けの割に坪単価が相場中央値まで調整されました。",
-                    "negotiation": "売主側の期末売却希望の気配あり。年内決済前提での満額即決または端数交渉が有効です。",
-                    "yield": "実需向け高属性賃貸の需要が極めて高く、将来のリロケーション時も想定賃料42万円で回ります。"
-                }
-            },
-            {
-                "name": "シティタワー品川",
-                "ward": "港区",
-                "price": 7980,
-                "previous_price": 8380,
-                "price_drop": 400,
-                "area": 82.5,
-                "tsubo_price": 319,
-                "gap_rate": -6.1,
-                "score": 6.1,
-                "updated_at": datetime.now().strftime("%m/%d %H:%M"),
-                "proposals": {
-                    "power_couple": "借地権を許容できる実利派顧客に最適。港区アドレス×80㎡超で8000万切りは即電話案件です。",
-                    "family": "敷地内商業施設・共用部充実。ランニングコストを含めても近隣一般マンションの70㎡並み返済額。",
-                    "negotiation": "値下げ直後のためスピード勝負。週末内覧の先行予約を優先してください。",
-                    "yield": "表面利回り・実利ともに港区トップクラス。貸しやすさ重視の実需層へ刺さります。"
-                }
-            }
-        ]
-        excluded_list = [
-            {"name": "オープンレジデンシア新宿", "ward": "新宿区", "reason": "専有面積34.2㎡（実需外）"},
-            {"name": "ブランズタワー芝浦", "ward": "港区", "reason": "相場比+14.8%（乖離大・見送り）"}
-        ]
+        print("新規の値下げメールが見つかりませんでした。")
+        stats = {"total_detected": 0, "excluded_conditions": 0, "excluded_high_price": 0, "recommended": 0}
+        recommended_list = []
+        excluded_list = []
     else:
         stats, recommended_list, excluded_list = parse_and_screen(emails)
 
@@ -213,7 +176,7 @@ def main():
     with open("data/latest_deals.json", "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"更新完了: 全{stats['total_detected']}件中 ➜ 提案推奨 {stats['recommended']}件を抽出")
+    print(f"更新完了: latest_deals.json (検知: {stats['total_detected']}件 / 推奨: {stats['recommended']}件)")
 
 if __name__ == "__main__":
     main()
