@@ -26,6 +26,7 @@ jobs:
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python update_properties.py
 
       - name: Commit and push changes
