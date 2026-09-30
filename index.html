@@ -14,23 +14,23 @@
     <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-          <i class="fa-solid fa-shield-halved"></i>
+          <i class="fa-solid fa-bolt"></i>
           <span>23区 実需限定モニター（成約圏内のみ）</span>
         </div>
         <h1 class="text-lg font-bold tracking-tight">値下げ速報</h1>
         <p id="stats-banner" class="text-[11px] text-slate-300 mt-0.5">データ読み込み中...</p>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="fetchDeals()" class="p-2 text-slate-300 hover:text-white bg-slate-800 rounded-full">
+        <button onclick="fetchDeals()" title="更新" class="p-2 text-slate-300 hover:text-white bg-slate-800 rounded-full">
           <i class="fa-solid fa-rotate"></i>
         </button>
-        <button onclick="openModal()" class="p-2 text-slate-300 hover:text-white bg-slate-800 rounded-full">
+        <button onclick="openModal()" title="内訳ログ" class="p-2 text-slate-300 hover:text-white bg-slate-800 rounded-full">
           <i class="fa-solid fa-sliders"></i>
         </button>
       </div>
     </div>
 
-    <!-- 簡易区絞り込み（任意用） -->
+    <!-- 絞り込みバー -->
     <div class="max-w-xl mx-auto px-4 pb-2.5 flex items-center gap-2">
       <select id="ward-filter" onchange="renderCards()" class="text-xs bg-slate-800 text-white rounded px-2.5 py-1.5 border border-slate-700 focus:outline-none">
         <option value="ALL">23区すべて（お買い得順）</option>
@@ -40,13 +40,13 @@
   </header>
 
   <!-- メインリスト -->
-  <main class="max-w-xl mx-auto px-4 mt-4 space-y-4" id="cards-container">
+  <main class="max-w-xl mx-auto px-4 mt-4 space-y-3" id="cards-container">
     <!-- カードがここに自動展開 -->
   </main>
 
   <!-- 監査・除外ログモーダル -->
   <div id="log-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-md w-full p-5 space-y-4 max-h-[85vh] flex flex-col">
+    <div class="bg-white rounded-xl max-w-md w-full p-5 space-y-4 max-h-[85vh] flex flex-col shadow-2xl">
       <div class="flex items-center justify-between border-b pb-2">
         <h3 class="font-bold text-sm text-slate-800">検知内訳・見送りログ</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
@@ -63,7 +63,6 @@
     let globalData = { properties: [], stats: {}, excluded: [] };
     const WARDS = ["千代田区","中央区","港区","新宿区","文京区","台東区","墨田区","江東区","品川区","目黒区","大田区","世田谷区","渋谷区","中野区","杉並区","豊島区","北区","荒川区","板橋区","練馬区","足立区","葛飾区","江戸川区"];
 
-    // 区セレクトボックス初期化
     const wardSelect = document.getElementById("ward-filter");
     WARDS.forEach(w => {
       const opt = document.createElement("option");
@@ -81,7 +80,6 @@
         if (!res.ok) throw new Error("Not Found");
         globalData = await res.json();
         
-        // ヘッダー統計表示
         const s = globalData.stats;
         document.getElementById("stats-banner").innerHTML = 
           `<span class="text-slate-400">${globalData.updated_at} 更新</span> ｜ 本日 <span class="font-bold text-white">${s.total_detected || 0}件</span> 検知 ➜ 提案推奨 <span class="font-bold text-emerald-400">${s.recommended || 0}件</span>`;
@@ -90,7 +88,7 @@
       } catch (err) {
         container.innerHTML = `
           <div class="bg-white p-6 rounded-xl border text-center space-y-2">
-            <p class="font-bold text-sm text-slate-700">成約圏内の速報データはありません</p>
+            <p class="font-bold text-sm text-slate-700">速報データはありません</p>
             <p class="text-xs text-slate-400">Actionsを実行するか、メールの巡回をお待ちください。</p>
           </div>`;
       }
@@ -110,22 +108,32 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = '<div class="text-center py-10 text-slate-400 text-xs">条件に合致する提案推奨物件はありません</div>';
+        container.innerHTML = '<div class="text-center py-10 text-slate-400 text-xs">条件に合致する物件はありません</div>';
         return;
       }
 
-      container.innerHTML = list.map(p => `
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex items-start justify-between gap-3">
-            <div>
-              <span class="inline-block px-2 py-0.5 bg-slate-900 text-white text-[10px] font-bold rounded mb-1">${p.ward}</span>
+      container.innerHTML = list.map(p => {
+        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.ward + " " + p.name)}`;
+        const sourceLabel = p.source ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">元: ${p.source}</span>` : '';
+
+        return `
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:border-slate-300 transition-colors">
+          <div class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 bg-slate-900 text-white text-[10px] font-bold rounded">${p.ward}</span>
+                ${sourceLabel}
+              </div>
               <h2 class="font-bold text-sm text-slate-900 leading-snug">${p.name}</h2>
-              <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
+              <div class="flex items-center gap-3 text-xs text-slate-500 pt-0.5">
                 <span>${p.area}㎡</span>
                 <span>坪${p.tsubo_price}万</span>
+                <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-0.5 text-[11px] underline">
+                  <i class="fa-solid fa-location-dot"></i> Map
+                </a>
               </div>
             </div>
-            <div class="text-right">
+            <div class="text-right flex-shrink-0">
               <span class="inline-block px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded">
                 -${p.price_drop}万 (${p.gap_rate}%)
               </span>
@@ -133,33 +141,9 @@
               <div class="text-[10px] text-slate-400 line-through">${(p.previous_price).toLocaleString()}万円</div>
             </div>
           </div>
-
-          <!-- 4軸提案文タブ -->
-          <div class="p-3 bg-slate-50 text-xs space-y-2">
-            <div class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-              <i class="fa-solid fa-comment-dots text-emerald-600"></i> 客付け提案トーク（コピー可）
-            </div>
-            <div class="grid grid-cols-2 gap-1.5">
-              <button onclick="copyText('${p.proposals.power_couple}')" class="text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 text-[11px]">
-                <span class="font-bold text-slate-700 block">ペアローン客</span>
-                <span class="text-slate-500 line-clamp-2">${p.proposals.power_couple}</span>
-              </button>
-              <button onclick="copyText('${p.proposals.family}')" class="text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 text-[11px]">
-                <span class="font-bold text-slate-700 block">ファミリー実需</span>
-                <span class="text-slate-500 line-clamp-2">${p.proposals.family}</span>
-              </button>
-              <button onclick="copyText('${p.proposals.negotiation}')" class="text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 text-[11px]">
-                <span class="font-bold text-slate-700 block">指値・交渉狙い</span>
-                <span class="text-slate-500 line-clamp-2">${p.proposals.negotiation}</span>
-              </button>
-              <button onclick="copyText('${p.proposals.yield}')" class="text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 text-[11px]">
-                <span class="font-bold text-slate-700 block">資産性・リセール</span>
-                <span class="text-slate-500 line-clamp-2">${p.proposals.yield}</span>
-              </button>
-            </div>
-          </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function openModal() {
@@ -189,11 +173,6 @@
 
     function closeModal() {
       document.getElementById("log-modal").classList.add("hidden");
-    }
-
-    function copyText(txt) {
-      navigator.clipboard.writeText(txt);
-      alert("提案文をコピーしました！");
     }
 
     fetchDeals();
