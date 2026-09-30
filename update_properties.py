@@ -171,7 +171,7 @@ def extract_properties_with_gemini(email_item, api_key):
 {email_item['text'][:6000]}
 """
 
-    url = "[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent)"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     headers = {
         "Content-Type": "application/json",
         "x-goog-api-key": api_key
@@ -297,7 +297,7 @@ def parse_and_screen(emails_data, api_key):
             tsubo = area / 3.30578
             tsubo_price = round(price / tsubo, 1)
             map_query = urllib.parse.quote(f"{ward} {name}")
-            google_map_url = f"[https://www.google.com/maps/search/?api=1&query=](https://www.google.com/maps/search/?api=1&query=){map_query}"
+            google_map_url = f"https://www.google.com/maps/search/?api=1&query={map_query}"
 
             properties_dict[key] = {
                 "name": name,
