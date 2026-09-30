@@ -1,30 +1,16 @@
 {
-  "updated_at": "2026-09-30 12:08",
+  "updated_at": "2026-09-30 12:35",
   "stats": {
-    "total_detected": 24,
+    "total_detected": 22,
     "excluded_conditions": 2,
-    "recommended": 20,
+    "recommended": 19,
     "by_source": {
-      "住友ステップ": 3,
+      "住友ステップ": 1,
       "ノムコム": 1,
       "三井のリハウス": 20
     }
   },
   "properties": [
-    {
-      "name": "kojima様",
-      "ward": "千代田区",
-      "price": 10780,
-      "previous_price": null,
-      "price_drop": null,
-      "gap_rate": null,
-      "area": 65.09,
-      "tsubo_price": 547.5,
-      "deal_line": "1億130万円〜1億340万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20kojima%E6%A7%98",
-      "source": "住友ステップ",
-      "detected_at": "09/30 12:08"
-    },
     {
       "name": "プレミスト有明ガーデンズ",
       "ward": "港区",
@@ -37,7 +23,7 @@
       "deal_line": "1億130万円〜1億340万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%83%97%E3%83%AC%E3%83%9F%E3%82%B9%E3%83%88%E6%9C%89%E6%98%8E%E3%82%AC%E3%83%BC%E3%83%87%E3%83%B3%E3%82%BA",
       "source": "住友ステップ",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
@@ -51,7 +37,7 @@
       "deal_line": "4,700万円〜4,800万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%3C%21DOCTYPE%20HTML%20PUBLIC%20%22-//W3C//DTD%20HTML%204.01%20Transitional//EN%22%20%22http%3A//www.w3.org/TR/html4/loose.dtd%22%3E",
       "source": "ノムコム",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "保存した検索条件",
@@ -65,7 +51,7 @@
       "deal_line": "4,700万円〜4,800万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E4%BF%9D%E5%AD%98%E3%81%97%E3%81%9F%E6%A4%9C%E7%B4%A2%E6%9D%A1%E4%BB%B6",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "検索条件1",
@@ -79,7 +65,7 @@
       "deal_line": "4,700万円〜4,800万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E6%A4%9C%E7%B4%A2%E6%9D%A1%E4%BB%B61",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -93,7 +79,7 @@
       "deal_line": "4億1,170万円〜4億2,040万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -107,7 +93,7 @@
       "deal_line": "1億320万円〜1億540万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E7%9B%AE%E9%BB%92%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 新築マンション",
@@ -121,7 +107,7 @@
       "deal_line": "4億2,110万円〜4億3,000万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E6%96%B0%E7%AF%89%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -135,7 +121,7 @@
       "deal_line": "2億9,140万円〜2億9,760万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -149,7 +135,7 @@
       "deal_line": "4,960万円〜5,060万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%9D%89%E4%B8%A6%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -163,7 +149,7 @@
       "deal_line": "3億1,560万円〜3億2,230万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -177,7 +163,7 @@
       "deal_line": "1億800万円〜1億1,030万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -191,7 +177,7 @@
       "deal_line": "1億5,030万円〜1億5,350万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%96%E7%94%B0%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -205,7 +191,7 @@
       "deal_line": "2億7,070万円〜2億7,640万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -219,7 +205,7 @@
       "deal_line": "2億1,900万円〜2億2,360万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -233,7 +219,7 @@
       "deal_line": "3億4,590万円〜3億5,320万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 新築マンション",
@@ -247,7 +233,7 @@
       "deal_line": "1億6,070万円〜1億6,410万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E6%96%B0%E7%AF%89%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 新築マンション",
@@ -261,7 +247,7 @@
       "deal_line": "2億1,240万円〜2億1,690万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E6%96%B0%E7%AF%89%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "種別: 中古マンション",
@@ -275,7 +261,7 @@
       "deal_line": "7,500万円〜7,660万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%9D%89%E4%B8%A6%E5%8C%BA%20%E7%A8%AE%E5%88%A5%3A%20%E4%B8%AD%E5%8F%A4%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     },
     {
       "name": "〇お気に入り登録した物件を確認する",
@@ -289,7 +275,7 @@
       "deal_line": "4,700万円〜4,800万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%80%87%E3%81%8A%E6%B0%97%E3%81%AB%E5%85%A5%E3%82%8A%E7%99%BB%E9%8C%B2%E3%81%97%E3%81%9F%E7%89%A9%E4%BB%B6%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B",
       "source": "三井のリハウス",
-      "detected_at": "09/30 12:08"
+      "detected_at": "09/30 12:35"
     }
   ],
   "excluded": [
