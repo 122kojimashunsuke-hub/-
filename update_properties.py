@@ -5,6 +5,7 @@ import imaplib
 import email
 from email.header import decode_header
 from datetime import datetime
+import urllib.parse
 from bs4 import BeautifulSoup
 
 TARGET_WARDS = [
@@ -30,7 +31,7 @@ def decode_mime_words(s):
 
 def parse_price(text):
     """『1億6,500万円』『7,980万円』などを『万円』単位の数値に変換"""
-    oku_match = re.search(r'(\d+)億(?:(\d{1,4}(?:,\d{3})*|\d+))?万円?', text)
+    oku_match = re.search(r'(\d+)\s*億(?:(\d{1,4}(?:,\d{3})*|\d+))?\s*万円?', text)
     if oku_match:
         oku = int(oku_match.group(1)) * 10000
         man = int(oku_match.group(2).replace(',', '')) if oku_match.group(2) else 0
@@ -41,15 +42,36 @@ def parse_price(text):
         return int(man_match.group(1).replace(',', ''))
     return 0
 
+def format_price_yen(val):
+    """金額数値を日本語表記（〇億〇〇万円）にフォーマット"""
+    if val >= 10000:
+        oku = val // 10000
+        man = val % 10000
+        return f"{oku}億{f'{man:,}万' if man > 0 else ''}円"
+    return f"{val:,}万円"
+
 def calc_deal_line(price):
-    """予想成約ライン（約4%〜6%の指値落としどころレンジ）を算出"""
+    """予想成約ライン（約4%〜6%の指値落としどころレンジ）を算出（※logic.md記載の暫定仮置き）"""
     low = int((price * 0.94) // 10 * 10)
     high = int((price * 0.96) // 10 * 10)
-    if low >= 10000:
-        low_str = f"{low // 10000}億{low % 10000 if low % 10000 else ''}"
-        high_str = f"{high // 10000}億{high % 10000 if high % 10000 else ''}万円"
-        return f"{low_str}〜{high_str}"
-    return f"{low:,}〜{high:,}万円"
+    return f"{format_price_yen(low)}〜{format_price_yen(high)}"
+
+def parse_price_change(text):
+    """メール本文から新旧価格（例: 8,480万円 → 7,980万円）を正しく抽出。なければNone"""
+    patterns = [
+        r'(?:旧価格|改定前|変更前)[：:\s]*(\d+.*万円?).*?(?:新価格|改定後|変更後)[：:\s]*(\d+.*万円?)',
+        r'(\d+.*万円?)\s*(?:[→~〜]|から)\s*(?:新価格[：:\s]*)?(\d+.*万円?)'
+    ]
+    for pat in patterns:
+        m = re.search(pat, text)
+        if m:
+            old_p = parse_price(m.group(1))
+            new_p = parse_price(m.group(2))
+            if old_p > new_p and new_p > 0:
+                drop = old_p - new_p
+                rate = -round((drop / old_p) * 100, 1)
+                return old_p, new_p, drop, rate
+    return None, None, None, None
 
 def fetch_emails():
     user = os.environ.get("GMAIL_USER")
@@ -73,7 +95,6 @@ def fetch_emails():
     print(f"受信トレイの総メール数: {len(mail_ids)}通")
 
     emails_data = []
-    # 直近150通を探索
     target_ids = mail_ids[-150:]
     
     for m_id in reversed(target_ids):
@@ -84,8 +105,8 @@ def fetch_emails():
                 subject = decode_mime_words(msg.get("Subject", ""))
                 from_header = decode_mime_words(msg.get("From", ""))
                 
-                # 送信元会社判定
-                source = "他社ポータル"
+                # 4社以外は即座にスキップ
+                source = None
                 if any(k in from_header or k in subject for k in ["住友不動産", "stepon", "ステップ"]):
                     source = "住友ステップ"
                 elif any(k in from_header or k in subject for k in ["三井のリハウス", "rehouse", "リアルティ"]):
@@ -94,6 +115,9 @@ def fetch_emails():
                     source = "東急リバブル"
                 elif any(k in from_header or k in subject for k in ["ノムコム", "nomu.com", "野村"]):
                     source = "ノムコム"
+
+                if not source:
+                    continue
 
                 html_body = ""
                 plain_body = ""
@@ -125,35 +149,56 @@ def fetch_emails():
     return emails_data
 
 def extract_properties_from_email(item):
-    """HTML・テキストの両形式から物件を漏れなく抽出"""
+    """HTML・テキスト両形式から物件を抽出"""
     found_properties = []
     source = item["source"]
     
-    # 1. HTMLメールの場合（ノムコムなど）
+    # 1. HTMLメールの場合（ノムコム等）
     if item["html"]:
         soup = BeautifulSoup(item["html"], "html.parser")
-        for block in soup.find_all(["table", "div", "td"]):
+        for block in soup.find_all(["table", "div"]):
             text = block.get_text()
-            if any(k in text for k in ["価格変更", "値下げ", "新着"]):
-                title_match = re.search(r'([^\s\n\r]+(?:タワー|プラザ|マンション|レヴィール|コート|ハウス|アリーナ|レジデンス|パーク|ハイツ)[^\s\n\r]*)', text)
-                name = title_match.group(1) if title_match else ""
+            if any(k in text for k in ["価格変更", "値下げ"]):
+                name = ""
+                name_el = block.find(["h3", "h4", "strong", "b", "a"])
+                if name_el:
+                    candidate = clean_text(name_el.get_text())
+                    if len(candidate) >= 3 and not any(k in candidate for k in ["価格変更", "詳細を見る", "POINT", "新着"]):
+                        name = candidate
                 
-                if not name or len(name) < 4 or any(k in name for k in ["価格変更", "新着", "詳細を見る"]):
+                if not name:
+                    lines = [clean_text(l) for l in text.splitlines() if len(clean_text(l)) >= 3]
+                    for l in lines:
+                        if not any(k in l for k in ["価格変更", "POINT", "新着", "詳細", "中古マンション", "万円", "㎡"]):
+                            name = l
+                            break
+
+                if not name or len(name) < 3:
                     continue
 
                 ward = next((w for w in TARGET_WARDS if w in text), None)
                 if not ward:
                     continue
 
-                price = parse_price(text)
+                # 監査指摘反映①：新旧価格の取得
+                old_p, new_p, drop, rate = parse_price_change(text)
+                if new_p:
+                    price = new_p
+                else:
+                    price_match = re.search(r'(?:新価格[：:\s]*)?(\d+.*万円?)', text)
+                    price = parse_price(price_match.group(1)) if price_match else 0
+
                 area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2)', text)
                 area = float(area_match.group(1)) if area_match else 0.0
 
                 if price > 0 and area > 0:
                     found_properties.append({
-                        "name": clean_text(name),
+                        "name": name,
                         "ward": ward,
                         "price": price,
+                        "previous_price": old_p,
+                        "price_drop": drop,
+                        "gap_rate": rate,
                         "area": area,
                         "source": source
                     })
@@ -161,7 +206,6 @@ def extract_properties_from_email(item):
     # 2. テキストメールの場合（ステップ、リハウス、リバブル等）
     text_content = item["plain"] or ""
     if text_content:
-        # 物件ごとの区切りを分割
         sections = re.split(r'[-=]{10,}|【物件', text_content)
         for sec in sections:
             if not any(k in sec for k in ["価格", "万円", "㎡"]):
@@ -171,14 +215,25 @@ def extract_properties_from_email(item):
             if not ward:
                 continue
 
-            name_match = re.search(r'(?:名[：:]|】|^)\s*([^\n\r]+?(?:タワー|プラザ|マンション|レヴィール|コート|ハウス|アリーナ|レジデンス|パーク|ハイツ)[^\n\r]*)', sec)
-            name = clean_text(name_match.group(1)) if name_match else ""
-            if not name or len(name) < 4:
-                # 簡易抽出
-                lines = [l.strip() for l in sec.split('\n') if l.strip()]
-                name = lines[0][:25] if lines else f"{ward}中古マンション"
+            name = ""
+            name_m = re.search(r'(?:物件名|名称|マンション名)[：:\s]*([^\n\r]+)', sec)
+            if name_m:
+                name = clean_text(name_m.group(1))
+            else:
+                lines = [clean_text(l) for l in sec.splitlines() if len(clean_text(l)) >= 3]
+                if lines:
+                    name = lines[0]
 
-            price = parse_price(sec)
+            if not name or len(name) < 3:
+                continue
+
+            # 監査指摘反映②：新旧価格の取得
+            old_p, new_p, drop, rate = parse_price_change(sec)
+            if new_p:
+                price = new_p
+            else:
+                price = parse_price(sec)
+
             area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2)', sec)
             area = float(area_match.group(1)) if area_match else 0.0
 
@@ -187,30 +242,25 @@ def extract_properties_from_email(item):
                     "name": name,
                     "ward": ward,
                     "price": price,
+                    "previous_price": old_p,
+                    "price_drop": drop,
+                    "gap_rate": rate,
                     "area": area,
                     "source": source
                 })
 
-    # 重複除外
-    unique = {}
-    for p in found_properties:
-        key = f"{p['ward']}_{p['name']}"
-        if key not in unique:
-            unique[key] = p
-    return list(unique.values())
+    return found_properties
 
 def parse_and_screen(emails_data):
     stats = {
         "total_detected": 0,
         "excluded_conditions": 0,
-        "excluded_high_price": 0,
         "recommended": 0,
         "by_source": {}
     }
     
-    recommended_list = []
+    properties_dict = {}
     excluded_list = []
-    seen_keys = set()
 
     for item in emails_data:
         props = extract_properties_from_email(item)
@@ -227,46 +277,65 @@ def parse_and_screen(emails_data):
             area = p["area"]
             source = p["source"]
 
-            dup_key = f"{ward}_{name[:6]}_{round(area, 0)}"
-            if dup_key in seen_keys:
-                continue
-            seen_keys.add(dup_key)
-
-            # 実需フィルター（40㎡以上、5,000万円以上）
+            # 実需除外ログの詳細化
             if area < 40:
                 stats["excluded_conditions"] += 1
-                excluded_list.append({"name": name, "ward": ward, "reason": f"専有面積基準外 ({area}㎡)"})
+                excluded_list.append({
+                    "name": name, "ward": ward, "price": price, "area": area,
+                    "source": source, "reason": f"専有面積基準外 ({area}㎡ < 40㎡)"
+                })
                 continue
             if price < 5000:
                 stats["excluded_conditions"] += 1
-                excluded_list.append({"name": name, "ward": ward, "reason": f"価格帯基準外 ({price:,}万円)"})
+                excluded_list.append({
+                    "name": name, "ward": ward, "price": price, "area": area,
+                    "source": source, "reason": f"価格帯基準外 ({format_price_yen(price)} < 5,000万円)"
+                })
+                continue
+
+            # 名寄せ完全一致判定と重複統合
+            key = f"{ward}_{name}_{area}"
+            
+            if key in properties_dict:
+                existing = properties_dict[key]
+                sources = existing["source"].split(" / ")
+                if source not in sources:
+                    sources.append(source)
+                    existing["source"] = " / ".join(sources)
+                if price < existing["price"]:
+                    existing["price"] = price
+                    existing["deal_line"] = calc_deal_line(price)
+                    existing["tsubo_price"] = round(price / (area / 3.30578), 1)
+                    if p["previous_price"]:
+                        existing["previous_price"] = p["previous_price"]
+                        existing["price_drop"] = p["price_drop"]
+                        existing["gap_rate"] = p["gap_rate"]
                 continue
 
             tsubo = area / 3.30578
             tsubo_price = round(price / tsubo, 1)
 
-            price_drop = 300
-            gap_percent = -round((price_drop / (price + price_drop)) * 100, 1)
+            map_query = urllib.parse.quote(f"{ward} {name}")
+            google_map_url = f"https://www.google.com/maps/search/?api=1&query={map_query}"
 
-            property_obj = {
+            properties_dict[key] = {
                 "name": name,
                 "ward": ward,
                 "price": price,
-                "previous_price": price + price_drop,
-                "price_drop": price_drop,
+                "previous_price": p["previous_price"],
+                "price_drop": p["price_drop"],
+                "gap_rate": p["gap_rate"],
                 "area": area,
                 "tsubo_price": tsubo_price,
-                "gap_rate": gap_percent,
-                "score": abs(gap_percent),
-                "deal_line": calc_deal_line(price), # 予想成約ライン
+                "deal_line": calc_deal_line(price),
+                "google_map_url": google_map_url,
                 "source": source,
-                "updated_at": datetime.now().strftime("%m/%d %H:%M")
+                "detected_at": datetime.now().strftime("%m/%d %H:%M")
             }
 
-            recommended_list.append(property_obj)
-            stats["recommended"] += 1
+    recommended_list = list(properties_dict.values())
+    stats["recommended"] = len(recommended_list)
 
-    recommended_list.sort(key=lambda x: x["score"], reverse=True)
     return stats, recommended_list, excluded_list
 
 def main():
@@ -285,7 +354,6 @@ def main():
     with open("data/latest_deals.json", "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
 
-    # 会社ごとの内訳をログに分かりやすく出力
     print("\n=== 各社メール検知内訳 ===")
     for src, count in stats["by_source"].items():
         print(f"■ {src}: {count}件 検知")
