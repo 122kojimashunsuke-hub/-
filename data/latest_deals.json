@@ -1,42 +1,11 @@
 {
-  "updated_at": "2026-09-30 13:50",
+  "updated_at": "2026-09-30 14:13",
   "stats": {
-    "total_detected": 2,
+    "total_detected": 0,
     "excluded_conditions": 0,
-    "recommended": 2,
-    "by_source": {
-      "住友ステップ": 2
-    }
+    "recommended": 0,
+    "by_source": {}
   },
-  "properties": [
-    {
-      "name": "プレミスト有明ガーデンズ",
-      "ward": "江東区",
-      "price": 10780,
-      "previous_price": null,
-      "price_drop": null,
-      "gap_rate": null,
-      "area": 65.09,
-      "tsubo_price": 547.5,
-      "deal_line": "1億130万円〜1億340万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B1%9F%E6%9D%B1%E5%8C%BA%20%E3%83%97%E3%83%AC%E3%83%9F%E3%82%B9%E3%83%88%E6%9C%89%E6%98%8E%E3%82%AC%E3%83%BC%E3%83%87%E3%83%B3%E3%82%BA",
-      "source": "住友ステップ",
-      "detected_at": "09/30 13:50"
-    },
-    {
-      "name": "シティタワー品川",
-      "ward": "千代田区",
-      "price": 14500,
-      "previous_price": null,
-      "price_drop": null,
-      "gap_rate": null,
-      "area": 89.87,
-      "tsubo_price": 533.4,
-      "deal_line": "1億3,630万円〜1億3,920万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E5%93%81%E5%B7%9D",
-      "source": "住友ステップ",
-      "detected_at": "09/30 13:50"
-    }
-  ],
+  "properties": [],
   "excluded": []
 }
