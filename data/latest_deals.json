@@ -1,11 +1,95 @@
 {
-  "updated_at": "2026-09-30 10:29",
+  "updated_at": "2026-09-30 10:36",
   "stats": {
-    "total_detected": 0,
-    "excluded_conditions": 0,
+    "total_detected": 9,
+    "excluded_conditions": 2,
     "excluded_high_price": 0,
-    "recommended": 0
+    "recommended": 4
   },
-  "properties": [],
-  "excluded": []
+  "properties": [
+    {
+      "name": "千代田区中古マンション",
+      "ward": "千代田区",
+      "price": 5000,
+      "previous_price": 5300,
+      "price_drop": 300,
+      "area": 71.0,
+      "tsubo_price": 232.8,
+      "gap_rate": -4.5,
+      "score": 4.5,
+      "updated_at": "09/30 10:36",
+      "proposals": {
+        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
+        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
+        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
+        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
+      }
+    },
+    {
+      "name": "中央区中古マンション",
+      "ward": "中央区",
+      "price": 7480,
+      "previous_price": 7780,
+      "price_drop": 300,
+      "area": 55.4,
+      "tsubo_price": 446,
+      "gap_rate": -4.5,
+      "score": 4.5,
+      "updated_at": "09/30 10:36",
+      "proposals": {
+        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
+        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
+        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
+        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
+      }
+    },
+    {
+      "name": "ブランズ六本木飯倉片町",
+      "ward": "千代田区",
+      "price": 43800,
+      "previous_price": 44100,
+      "price_drop": 300,
+      "area": 113.72,
+      "tsubo_price": 1273.2,
+      "gap_rate": -4.5,
+      "score": 4.5,
+      "updated_at": "09/30 10:36",
+      "proposals": {
+        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
+        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
+        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
+        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
+      }
+    },
+    {
+      "name": "渋谷区中古マンション",
+      "ward": "渋谷区",
+      "price": 7480,
+      "previous_price": 7780,
+      "price_drop": 300,
+      "area": 55.4,
+      "tsubo_price": 446,
+      "gap_rate": -4.5,
+      "score": 4.5,
+      "updated_at": "09/30 10:36",
+      "proposals": {
+        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
+        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
+        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
+        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "name": "港区中古マンション",
+      "ward": "港区",
+      "reason": "価格帯基準外 (3098万円)"
+    },
+    {
+      "name": "千代田区中古マンション",
+      "ward": "千代田区",
+      "reason": "価格帯基準外 (80万円)"
+    }
+  ]
 }
