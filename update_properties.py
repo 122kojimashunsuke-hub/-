@@ -51,13 +51,13 @@ def format_price_yen(val):
     return f"{val:,}万円"
 
 def calc_deal_line(price):
-    """予想成約ライン（約4%〜6%の指値落としどころレンジ）を算出（※logic.md暫定仮置き）"""
+    """予想成約ライン（約4%〜6%の指値落としどころレンジ）を算出"""
     low = int((price * 0.94) // 10 * 10)
     high = int((price * 0.96) // 10 * 10)
     return f"{format_price_yen(low)}〜{format_price_yen(high)}"
 
 def parse_price_change(text):
-    """メール本文から新旧価格を抽出。なければNone（new_p も返却）"""
+    """メール本文から新旧価格を抽出。なければNone"""
     patterns = [
         r'(?:旧価格|改定前|変更前)[：:\s]*(\d+.*万円?).*?(?:新価格|改定後|変更後)[：:\s]*(\d+.*万円?)',
         r'(\d+.*万円?)\s*(?:[→~〜]|から)\s*(?:新価格[：:\s]*)?(\d+.*万円?)'
@@ -95,8 +95,9 @@ def fetch_emails():
     print(f"受信トレイの総メール数: {len(mail_ids)}通")
 
     emails_data = []
-    target_ids = mail_ids[-150:]
-    
+    target_ids = mail_ids[-200:]
+    mail_source_counts = {}
+
     for m_id in reversed(target_ids):
         _, msg_data = mail.fetch(m_id, "(RFC822)")
         for response_part in msg_data:
@@ -104,8 +105,6 @@ def fetch_emails():
                 msg = email.message_from_bytes(response_part[1])
                 subject = decode_mime_words(msg.get("Subject", ""))
                 from_header = decode_mime_words(msg.get("From", ""))
-                
-                # 修正①：小文字化して大文字・小文字ブレを完全排除
                 header_text = (from_header + " " + subject).lower()
 
                 source = None
@@ -120,6 +119,8 @@ def fetch_emails():
 
                 if not source:
                     continue
+
+                mail_source_counts[source] = mail_source_counts.get(source, 0) + 1
 
                 html_body = ""
                 plain_body = ""
@@ -148,103 +149,222 @@ def fetch_emails():
                 })
     
     mail.logout()
+    print("=== 受信メール件数内訳 ===")
+    for src, c in mail_source_counts.items():
+        print(f"・{src}: {c}通 受信")
+    print("=========================")
     return emails_data
 
-def extract_properties_from_email(item):
-    found_properties = []
-    source = item["source"]
-    
-    # 1. HTMLメール解析（ノムコム、東急リバブル等）
+# --- 各社別専用パーサー ---
+
+def extract_livable(item):
+    """東急リバブル専用：『新価格』バッジ起点で抽出"""
+    props = []
+    if not item["html"]:
+        return props
+    soup = BeautifulSoup(item["html"], "html.parser")
+    badges = soup.find_all(string=re.compile(r'新価格'))
+    processed_cards = set()
+
+    for badge in badges:
+        card = badge.parent
+        matched_block = None
+        for _ in range(8):
+            if not card or card.name in ['html', 'body']:
+                break
+            txt = card.get_text()
+            if any(w in txt for w in TARGET_WARDS) and re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', txt):
+                matched_block = card
+                break
+            card = card.parent
+
+        if not matched_block or id(matched_block) in processed_cards:
+            continue
+        processed_cards.add(id(matched_block))
+
+        card_text = matched_block.get_text()
+        ward = next((w for w in TARGET_WARDS if w in card_text), None)
+        if not ward:
+            continue
+
+        name = ""
+        for tag in matched_block.find_all(["a", "h3", "h4", "strong", "b"]):
+            t = clean_text(tag.get_text())
+            if len(t) >= 3 and not any(k in t for k in ["新価格", "詳細", "POINT", "新着", "画像", "中古マンション", "Myリバブル"]):
+                name = t
+                break
+        if not name or len(name) < 3:
+            continue
+
+        old_p, new_p, drop, rate = parse_price_change(card_text)
+        if new_p:
+            price = new_p
+        else:
+            p_m = re.search(r'(\d+.*万円?)', card_text)
+            price = parse_price(p_m.group(1)) if p_m else 0
+
+        area_m = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', card_text)
+        area = float(area_m.group(1)) if area_m else 0.0
+
+        if price > 0 and area > 0:
+            props.append({
+                "name": name, "ward": ward, "price": price,
+                "previous_price": old_p, "price_drop": drop, "gap_rate": rate,
+                "area": area, "source": item["source"]
+            })
+    return props
+
+def extract_stepon(item):
+    """住友ステップ専用：『マンション』ラベル区切りで全物件抽出"""
+    props = []
+    text_content = ""
     if item["html"]:
         soup = BeautifulSoup(item["html"], "html.parser")
-        for block in soup.find_all(["table", "div"]):
-            text = block.get_text()
-            if any(k in text for k in ["価格変更", "値下げ", "新価格"]):
-                name = ""
-                name_el = block.find(["a", "h3", "h4", "strong", "b"])
-                if name_el:
-                    candidate = clean_text(name_el.get_text())
-                    if len(candidate) >= 3 and not any(k in candidate for k in ["価格変更", "詳細", "POINT", "新着", "新価格", "画像追加"]):
-                        name = candidate
+        text_content = soup.get_text(separator="\n")
+    else:
+        text_content = item["plain"] or ""
 
-                if not name or len(name) < 3:
-                    continue
-
-                ward = next((w for w in TARGET_WARDS if w in text), None)
-                if not ward:
-                    continue
-
-                # 修正②：新価格（new_p）が存在する場合は最優先で代入
-                old_p, new_p, drop, rate = parse_price_change(text)
-                if new_p:
-                    price = new_p
-                else:
-                    price_match = re.search(r'(?:新価格[：:\s\d/]*|新価格[：:\s]*)?(\d+.*万円?)', text)
-                    price = parse_price(price_match.group(1)) if price_match else 0
-
-                # 面積抽出（m², ㎡, 平米, m2 すべて網羅）
-                area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', text)
-                area = float(area_match.group(1)) if area_match else 0.0
-
-                if price > 0 and area > 0:
-                    found_properties.append({
-                        "name": name,
-                        "ward": ward,
-                        "price": price,
-                        "previous_price": old_p,
-                        "price_drop": drop,
-                        "gap_rate": rate,
-                        "area": area,
-                        "source": source
-                    })
-
-    # 2. テキストメール解析（住友ステップ等）
-    text_content = item["plain"] or ""
     if text_content:
-        sections = re.split(r'[-=]{10,}|【物件', text_content)
-        for sec in sections:
-            if not any(k in sec for k in ["価格", "万円", "㎡", "m2", "m²"]):
-                continue
-
+        sections = re.split(r'\n\s*マンション\s*\n', text_content)
+        for sec in sections[1:]:
             ward = next((w for w in TARGET_WARDS if w in sec), None)
             if not ward:
                 continue
 
-            name = ""
-            name_m = re.search(r'(?:物件名|名称|マンション名)[：:\s]*([^\n\r]+)', sec)
-            if name_m:
-                name = clean_text(name_m.group(1))
-            else:
-                lines = [clean_text(l) for l in sec.splitlines() if len(clean_text(l)) >= 3]
-                if lines:
-                    name = lines[0]
-
-            if not name or len(name) < 3:
+            lines = [clean_text(l) for l in sec.splitlines() if len(clean_text(l)) >= 3]
+            if not lines:
                 continue
+            name = lines[0]
 
-            # 修正②：テキスト側でも new_p を最優先採用（旧価格の誤保存を完全防止）
             old_p, new_p, drop, rate = parse_price_change(sec)
-            if new_p:
-                price = new_p
-            else:
-                price = parse_price(sec)
-
-            area_match = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', sec)
-            area = float(area_match.group(1)) if area_match else 0.0
+            price = new_p if new_p else parse_price(sec)
+            area_m = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', sec)
+            area = float(area_m.group(1)) if area_m else 0.0
 
             if price > 0 and area > 0:
-                found_properties.append({
-                    "name": name,
-                    "ward": ward,
-                    "price": price,
-                    "previous_price": old_p,
-                    "price_drop": drop,
-                    "gap_rate": rate,
-                    "area": area,
-                    "source": source
+                props.append({
+                    "name": name, "ward": ward, "price": price,
+                    "previous_price": old_p, "price_drop": drop, "gap_rate": rate,
+                    "area": area, "source": item["source"]
                 })
+    return props
 
-    return found_properties
+def extract_nomu(item):
+    """ノムコム専用パーサー"""
+    props = []
+    if not item["html"]:
+        return props
+    soup = BeautifulSoup(item["html"], "html.parser")
+    badges = soup.find_all(string=re.compile(r'価格変更|値下げ'))
+    processed_cards = set()
+
+    for badge in badges:
+        card = badge.parent
+        matched_block = None
+        for _ in range(8):
+            if not card or card.name in ['html', 'body']:
+                break
+            txt = card.get_text()
+            if any(w in txt for w in TARGET_WARDS) and re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', txt):
+                matched_block = card
+                break
+            card = card.parent
+
+        if not matched_block or id(matched_block) in processed_cards:
+            continue
+        processed_cards.add(id(matched_block))
+
+        card_text = matched_block.get_text()
+        ward = next((w for w in TARGET_WARDS if w in card_text), None)
+        if not ward:
+            continue
+
+        name = ""
+        for tag in matched_block.find_all(["a", "h3", "h4", "strong", "b"]):
+            t = clean_text(tag.get_text())
+            if len(t) >= 3 and not any(k in t for k in ["価格変更", "詳細", "POINT", "新着", "新価格", "画像"]):
+                name = t
+                break
+        if not name or len(name) < 3:
+            continue
+
+        old_p, new_p, drop, rate = parse_price_change(card_text)
+        price = new_p if new_p else parse_price(card_text)
+        area_m = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', card_text)
+        area = float(area_m.group(1)) if area_m else 0.0
+
+        if price > 0 and area > 0:
+            props.append({
+                "name": name, "ward": ward, "price": price,
+                "previous_price": old_p, "price_drop": drop, "gap_rate": rate,
+                "area": area, "source": item["source"]
+            })
+    return props
+
+def extract_rehouse(item):
+    """三井のリハウス専用：『価格変更物件』セクションのみを抽出（新着を完全排除）"""
+    props = []
+    text_content = ""
+    if item["html"]:
+        soup = BeautifulSoup(item["html"], "html.parser")
+        text_content = soup.get_text(separator="\n")
+    else:
+        text_content = item["plain"] or ""
+
+    if not text_content:
+        return props
+
+    target_part = ""
+    if "価格変更物件" in text_content:
+        after_change = text_content.split("価格変更物件", 1)[1]
+        end_markers = ["保存した検索条件", "新着物件", "メールマガジンやリハウスサイト"]
+        pos_list = [after_change.find(m) for m in end_markers if m in after_change]
+        cut_pos = min(pos_list) if pos_list else len(after_change)
+        target_part = after_change[:cut_pos]
+    else:
+        target_part = text_content
+
+    sections = re.split(r'物件詳細を見る|中古マンション', target_part)
+    for sec in sections:
+        ward = next((w for w in TARGET_WARDS if w in sec), None)
+        if not ward:
+            continue
+
+        lines = [clean_text(l) for l in sec.splitlines() if len(clean_text(l)) >= 3]
+        name = ""
+        for l in lines:
+            if not any(k in l for k in ["価格", "万円", "住所", "交通", "間取り", "専有面積", "階数", "向き", "総戸数", "築年月", "種別"]):
+                name = l
+                break
+
+        if not name or len(name) < 3:
+            continue
+
+        old_p, new_p, drop, rate = parse_price_change(sec)
+        price = new_p if new_p else parse_price(sec)
+        area_m = re.search(r'(\d{2,3}(?:\.\d{1,2})?)\s*(?:㎡|平米|m2|m²)', sec)
+        area = float(area_m.group(1)) if area_m else 0.0
+
+        if price > 0 and area > 0:
+            props.append({
+                "name": name, "ward": ward, "price": price,
+                "previous_price": old_p, "price_drop": drop, "gap_rate": rate,
+                "area": area, "source": item["source"]
+            })
+    return props
+
+def extract_properties_from_email(item):
+    """送信元会社に応じて最適な専用パーサーを呼び出す"""
+    src = item["source"]
+    if src == "東急リバブル":
+        return extract_livable(item)
+    elif src == "住友ステップ":
+        return extract_stepon(item)
+    elif src == "ノムコム":
+        return extract_nomu(item)
+    elif src == "三井のリハウス":
+        return extract_rehouse(item)
+    return []
 
 def parse_and_screen(emails_data):
     stats = {
