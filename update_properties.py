@@ -13,6 +13,12 @@ TARGET_WARDS = [
     "北区", "荒川区", "板橋区", "練馬区", "足立区", "葛飾区", "江戸川区"
 ]
 
+# 値下げ・改定を示唆するキーワード群
+TRIGGER_KEYWORDS = [
+    "値下げ", "価格改定", "価格変更", "値下げ物件", "値下", "プライスダウン",
+    "新着", "新着物件", "条件変更", "変更"
+]
+
 def clean_text(text):
     return re.sub(r'\s+', ' ', text).strip()
 
@@ -36,12 +42,11 @@ def fetch_emails():
         print("GMAIL_USER または GMAIL_APP_PASS が未設定です。")
         return []
 
-    print("=== ポータル値下げメール巡回開始 ===")
+    print("=== ポータルメール巡回開始 ===")
     mail = imaplib.IMAP4_SSL("imap.gmail.com")
     mail.login(user, app_pass)
     mail.select("inbox")
 
-    # 日本語検索によるUnicodeEncodeErrorを避けるため、安全に直近メールを取得
     status, messages = mail.search(None, 'ALL')
     if status != "OK" or not messages[0]:
         mail.logout()
@@ -51,8 +56,10 @@ def fetch_emails():
     print(f"受信トレイの総メール数: {len(mail_ids)}通")
 
     emails_data = []
-    # 直近の50通の中から「値下げ」「価格改定」のメールを抽出
-    target_ids = mail_ids[-50:]
+    # 直近の200通まで探索枠を広げる
+    target_ids = mail_ids[-200:]
+    
+    print("--- 直近メールの件名スキャン ---")
     for m_id in reversed(target_ids):
         _, msg_data = mail.fetch(m_id, "(RFC822)")
         for response_part in msg_data:
@@ -60,10 +67,6 @@ def fetch_emails():
                 msg = email.message_from_bytes(response_part[1])
                 subject = decode_mime_words(msg.get("Subject", ""))
                 
-                # 件名に値下げ・改定が含まれているか判定
-                if "値下げ" not in subject and "価格改定" not in subject:
-                    continue
-
                 body = ""
                 if msg.is_multipart():
                     for part in msg.walk():
@@ -72,19 +75,25 @@ def fetch_emails():
                             break
                 else:
                     body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
-                
-                emails_data.append({"subject": subject, "body": body})
+
+                full_text = subject + " " + body
+
+                # 件名または本文にキーワードが含まれているか判定
+                hit_keyword = next((kw for kw in TRIGGER_KEYWORDS if kw in full_text), None)
+                if hit_keyword:
+                    print(f"✔ 検知 [{hit_keyword}]: {subject[:40]}...")
+                    emails_data.append({"subject": subject, "body": body})
     
     mail.logout()
-    print(f"検知した値下げ・改定メール: {len(emails_data)}通")
+    print(f"合計検知メール数: {len(emails_data)}通")
     return emails_data
 
 def parse_and_screen(emails_data):
     stats = {
         "total_detected": len(emails_data),
-        "excluded_conditions": 0, # 40㎡未満や5000万未満など
-        "excluded_high_price": 0,  # 相場乖離で見送り
-        "recommended": 0           # 提案推奨
+        "excluded_conditions": 0,
+        "excluded_high_price": 0,
+        "recommended": 0
     }
     
     recommended_list = []
@@ -98,7 +107,7 @@ def parse_and_screen(emails_data):
         if not ward:
             continue
 
-        # 価格抽出（例: 7,980万円, 7980万）
+        # 価格抽出
         price_match = re.search(r'(\d{1,2}(?:,\d{3})*|\d{4,5})\s*万円', text)
         price = int(price_match.group(1).replace(',', '')) if price_match else 0
 
@@ -120,7 +129,7 @@ def parse_and_screen(emails_data):
             excluded_list.append({"name": name, "ward": ward, "reason": f"価格帯基準外 ({price}万円)"})
             continue
 
-        # 坪単価・乖離率算出
+        # 坪単価・スコア算出
         tsubo = area / 3.30578 if area > 0 else 20.0
         tsubo_price = round(price / tsubo, 1) if tsubo > 0 else 0
         gap_percent = -4.5
@@ -137,33 +146,24 @@ def parse_and_screen(emails_data):
             "score": abs(gap_percent),
             "updated_at": datetime.now().strftime("%m/%d %H:%M"),
             "proposals": {
-                "power_couple": "価格改定によりペアローン安全圏へ到達。近隣成約坪単価比でも割安感あり。",
-                "family": "教育環境重視層に強いエリア。平米数・部屋数ともに実需の成約中央値ラインです。",
-                "negotiation": "改定直後で注目度急上昇中。週末先行案内を押さえるのが有効です。",
-                "yield": "賃料相場に対して表面4.8%確保。将来の売却・賃貸転用にも耐えうる水準です。"
+                "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
+                "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
+                "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
+                "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
             }
         }
 
         recommended_list.append(property_obj)
         stats["recommended"] += 1
 
-    # お買い得スコア順に自動ソート
     recommended_list.sort(key=lambda x: x["score"], reverse=True)
-
     return stats, recommended_list, excluded_list
 
 def main():
     os.makedirs("data", exist_ok=True)
     emails = fetch_emails()
     
-    # 該当メールがない場合も画面が壊れないよう担保
-    if not emails:
-        print("新規の値下げメールが見つかりませんでした。")
-        stats = {"total_detected": 0, "excluded_conditions": 0, "excluded_high_price": 0, "recommended": 0}
-        recommended_list = []
-        excluded_list = []
-    else:
-        stats, recommended_list, excluded_list = parse_and_screen(emails)
+    stats, recommended_list, excluded_list = parse_and_screen(emails)
 
     output_payload = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -172,7 +172,6 @@ def main():
         "excluded": excluded_list
     }
 
-    # 統合データファイルとして保存
     with open("data/latest_deals.json", "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
 
