@@ -23,6 +23,9 @@ jobs:
           pip install requests beautifulsoup4 pytz
 
       - name: Run update script
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
         run: python update_properties.py
 
       - name: Commit and push changes
