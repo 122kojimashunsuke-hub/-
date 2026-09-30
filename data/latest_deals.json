@@ -1,95 +1,245 @@
 {
-  "updated_at": "2026-09-30 10:57",
+  "updated_at": "2026-09-30 11:08",
   "stats": {
-    "total_detected": 9,
-    "excluded_conditions": 2,
+    "total_detected": 20,
+    "excluded_conditions": 6,
     "excluded_high_price": 0,
-    "recommended": 4
+    "recommended": 14,
+    "by_source": {
+      "他社ポータル": 6,
+      "住友ステップ": 2,
+      "ノムコム": 1,
+      "三井のリハウス": 11
+    }
   },
   "properties": [
     {
-      "name": "千代田区中古マンション",
+      "name": "<!DOCTYPE HTML PUBLIC \"-/",
       "ward": "千代田区",
       "price": 5000,
       "previous_price": 5300,
       "price_drop": 300,
       "area": 71.0,
       "tsubo_price": 232.8,
-      "gap_rate": -4.5,
-      "score": 4.5,
-      "updated_at": "09/30 10:57",
-      "proposals": {
-        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
-        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
-        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
-        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
-      }
+      "gap_rate": -5.7,
+      "score": 5.7,
+      "deal_line": "4,700〜4,800万円",
+      "source": "ノムコム",
+      "updated_at": "09/30 11:08"
     },
     {
-      "name": "中央区中古マンション",
-      "ward": "中央区",
-      "price": 7480,
-      "previous_price": 7780,
-      "price_drop": 300,
-      "area": 55.4,
-      "tsubo_price": 446,
-      "gap_rate": -4.5,
-      "score": 4.5,
-      "updated_at": "09/30 10:57",
-      "proposals": {
-        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
-        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
-        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
-        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
-      }
-    },
-    {
-      "name": "ブランズ六本木飯倉片町",
+      "name": "保存した検索条件検索条件1種別中古マンション都道府県東京都地域千代田区",
       "ward": "千代田区",
+      "price": 5000,
+      "previous_price": 5300,
+      "price_drop": 300,
+      "area": 40.0,
+      "tsubo_price": 413.2,
+      "gap_rate": -5.7,
+      "score": 5.7,
+      "deal_line": "4,700〜4,800万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "検索条件1種別中古マンション都道府県東京都地域千代田区",
+      "ward": "千代田区",
+      "price": 5000,
+      "previous_price": 5300,
+      "price_drop": 300,
+      "area": 40.0,
+      "tsubo_price": 413.2,
+      "gap_rate": -5.7,
+      "score": 5.7,
+      "deal_line": "4,700〜4,800万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "〇お気に入り登録した物件を確認する",
+      "ward": "千代田区",
+      "price": 5000,
+      "previous_price": 5300,
+      "price_drop": 300,
+      "area": 40.0,
+      "tsubo_price": 413.2,
+      "gap_rate": -5.7,
+      "score": 5.7,
+      "deal_line": "4,700〜4,800万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "杉並区",
+      "price": 5280,
+      "previous_price": 5580,
+      "price_drop": 300,
+      "area": 42.5,
+      "tsubo_price": 410.7,
+      "gap_rate": -5.4,
+      "score": 5.4,
+      "deal_line": "4,960〜5,060万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "三田マンション",
+      "ward": "港区",
+      "price": 5399,
+      "previous_price": 5699,
+      "price_drop": 300,
+      "area": 41.14,
+      "tsubo_price": 433.8,
+      "gap_rate": -5.3,
+      "score": 5.3,
+      "deal_line": "5,070〜5,180万円",
+      "source": "他社ポータル",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "１丁目交通ゆりかもめ「有明テニスの森」駅徒歩2分専有面積65.09平米間取り3ＬＤＫ築年月2020/01所在階5階部分/地上15階お問合せ（担当店舗）0120-355-882有明ガーデンマンションプラザ営業時間：10:00～18:00毎週火・水曜",
+      "ward": "千代田区",
+      "price": 10780,
+      "previous_price": 11080,
+      "price_drop": 300,
+      "area": 65.09,
+      "tsubo_price": 547.5,
+      "gap_rate": -2.7,
+      "score": 2.7,
+      "deal_line": "1億130〜1億340万円",
+      "source": "住友ステップ",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "物件種別：マンション",
+      "ward": "港区",
+      "price": 10780,
+      "previous_price": 11080,
+      "price_drop": 300,
+      "area": 65.09,
+      "tsubo_price": 547.5,
+      "gap_rate": -2.7,
+      "score": 2.7,
+      "deal_line": "1億130〜1億340万円",
+      "source": "住友ステップ",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "目黒区",
+      "price": 10980,
+      "previous_price": 11280,
+      "price_drop": 300,
+      "area": 54.65,
+      "tsubo_price": 664.2,
+      "gap_rate": -2.7,
+      "score": 2.7,
+      "deal_line": "1億320〜1億540万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "世田谷区",
+      "price": 15990,
+      "previous_price": 16290,
+      "price_drop": 300,
+      "area": 70.27,
+      "tsubo_price": 752.2,
+      "gap_rate": -1.8,
+      "score": 1.8,
+      "deal_line": "1億5030〜1億5350万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "渋谷区",
+      "price": 31000,
+      "previous_price": 31300,
+      "price_drop": 300,
+      "area": 88.98,
+      "tsubo_price": 1151.7,
+      "gap_rate": -1.0,
+      "score": 1.0,
+      "deal_line": "2億9140〜2億9760万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "​三​田​ガ​ー​デ​ン​棟種別中古マンション価格33,580万円住所東京都港区三田１丁目交通東京メトロ南北線「麻布十番」駅",
+      "ward": "港区",
+      "price": 33580,
+      "previous_price": 33880,
+      "price_drop": 300,
+      "area": 72.08,
+      "tsubo_price": 1540.1,
+      "gap_rate": -0.9,
+      "score": 0.9,
+      "deal_line": "3億1560〜3億2230万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "港区",
       "price": 43800,
       "previous_price": 44100,
       "price_drop": 300,
       "area": 113.72,
       "tsubo_price": 1273.2,
-      "gap_rate": -4.5,
-      "score": 4.5,
-      "updated_at": "09/30 10:57",
-      "proposals": {
-        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
-        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
-        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
-        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
-      }
+      "gap_rate": -0.7,
+      "score": 0.7,
+      "deal_line": "4億1170〜4億2040万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
     },
     {
-      "name": "渋谷区中古マンション",
+      "name": "種別: 新築マンション",
       "ward": "渋谷区",
-      "price": 7480,
-      "previous_price": 7780,
+      "price": 44800,
+      "previous_price": 45100,
       "price_drop": 300,
-      "area": 55.4,
-      "tsubo_price": 446,
-      "gap_rate": -4.5,
-      "score": 4.5,
-      "updated_at": "09/30 10:57",
-      "proposals": {
-        "power_couple": "価格改定により成約ラインに突入。ペアローン検討層へ即打診推奨。",
-        "family": "文教・実需環境良好。平米単価・総額ともにこのエリアの成約中央値です。",
-        "negotiation": "改定直後で反響集中が予想されます。先行内覧枠の確保を優先。",
-        "yield": "賃貸需要の厚いゾーン。将来の資産性・リセールバリュー担保。"
-      }
+      "area": 71.68,
+      "tsubo_price": 2066.1,
+      "gap_rate": -0.7,
+      "score": 0.7,
+      "deal_line": "4億2110〜4億3000万円",
+      "source": "三井のリハウス",
+      "updated_at": "09/30 11:08"
     }
   ],
   "excluded": [
     {
-      "name": "港区中古マンション",
+      "name": "三田シャスターマンション",
       "ward": "港区",
-      "reason": "価格帯基準外 (3098万円)"
+      "reason": "価格帯基準外 (3,098万円)"
     },
     {
-      "name": "千代田区中古マンション",
-      "ward": "千代田区",
-      "reason": "価格帯基準外 (80万円)"
+      "name": "南麻布プラザ",
+      "ward": "港区",
+      "reason": "専有面積基準外 (36.87㎡)"
+    },
+    {
+      "name": "クイーンハイツ三田",
+      "ward": "港区",
+      "reason": "価格帯基準外 (4,250万円)"
+    },
+    {
+      "name": "高輪スカイハイツ",
+      "ward": "港区",
+      "reason": "専有面積基準外 (37.76㎡)"
+    },
+    {
+      "name": "朝日白金台マンション",
+      "ward": "港区",
+      "reason": "専有面積基準外 (30.81㎡)"
+    },
+    {
+      "name": "種別: 中古マンション",
+      "ward": "江東区",
+      "reason": "専有面積基準外 (33.33㎡)"
     }
   ]
 }
