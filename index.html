@@ -44,7 +44,7 @@
     <!-- カードがここに自動展開 -->
   </main>
 
-  <!-- 監査・除外ログモーダル -->
+  <!-- 監査・内訳モーダル -->
   <div id="log-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-xl max-w-md w-full p-5 space-y-4 max-h-[85vh] flex flex-col shadow-2xl">
       <div class="flex items-center justify-between border-b pb-2">
@@ -114,10 +114,21 @@
 
       container.innerHTML = list.map(p => {
         const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.ward + " " + p.name)}`;
-        const sourceLabel = p.source ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">元: ${p.source}</span>` : '';
+        const sourceLabel = p.source ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">${p.source}</span>` : '';
+
+        // 金額フォーマット（億単位対応）
+        const formatYen = (num) => {
+          if (num >= 10000) {
+            const oku = Math.floor(num / 10000);
+            const man = num % 10000;
+            return `${oku}億${man > 0 ? man.toLocaleString() : ''}万円`;
+          }
+          return `${num.toLocaleString()}万円`;
+        };
 
         return `
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:border-slate-300 transition-colors">
+          <!-- 上段: 物件名・価格 -->
           <div class="flex items-start justify-between gap-3">
             <div class="space-y-1">
               <div class="flex items-center gap-1.5 flex-wrap">
@@ -137,9 +148,19 @@
               <span class="inline-block px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded">
                 -${p.price_drop}万 (${p.gap_rate}%)
               </span>
-              <div class="text-base font-extrabold text-slate-900 mt-1">${(p.price).toLocaleString()}万円</div>
-              <div class="text-[10px] text-slate-400 line-through">${(p.previous_price).toLocaleString()}万円</div>
+              <div class="text-base font-extrabold text-slate-900 mt-1">${formatYen(p.price)}</div>
+              <div class="text-[10px] text-slate-400 line-through">${formatYen(p.previous_price)}</div>
             </div>
+          </div>
+
+          <!-- 下段: 予想成約ライン -->
+          <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500 flex items-center gap-1 font-medium text-[11px]">
+              <i class="fa-solid fa-bullseye text-emerald-500"></i> 予想成約ライン
+            </span>
+            <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[11px]">
+              ${p.deal_line || '算出中'}
+            </span>
           </div>
         </div>
         `;
@@ -148,10 +169,16 @@
 
     function openModal() {
       const s = globalData.stats || {};
+      const bySourceHtml = s.by_source ? Object.entries(s.by_source).map(([k, v]) => `
+        <div class="flex justify-between text-slate-600"><span>${k}:</span><span>${v}件</span></div>
+      `).join('') : '';
+
       document.getElementById("log-summary").innerHTML = `
-        <div class="flex justify-between"><span>総検知件数:</span><span class="font-bold">${s.total_detected || 0}件</span></div>
-        <div class="flex justify-between text-slate-500"><span>実需外除外 (40㎡/5000万未満):</span><span>${s.excluded_conditions || 0}件</span></div>
-        <div class="flex justify-between text-slate-500"><span>相場乖離大 (見送り):</span><span>${s.excluded_high_price || 0}件</span></div>
+        <div class="flex justify-between font-bold text-slate-800 border-b pb-1"><span>総検知件数:</span><span>${s.total_detected || 0}件</span></div>
+        <div class="py-1 space-y-0.5 text-[11px]">
+          ${bySourceHtml}
+        </div>
+        <div class="flex justify-between text-slate-500 border-t pt-1"><span>実需外除外 (40㎡/5000万未満):</span><span>${s.excluded_conditions || 0}件</span></div>
         <div class="flex justify-between text-emerald-600 font-bold border-t pt-1"><span>提案推奨掲載:</span><span>${s.recommended || 0}件</span></div>
       `;
 
