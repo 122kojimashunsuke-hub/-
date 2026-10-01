@@ -171,9 +171,11 @@ def extract_properties_with_gemini(email_item, api_key):
 {email_item['text'][:6000]}
 """
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key.strip()}"
+# 1. URLとヘッダーの設定（ヘッダーで安全にAPIキーを渡す方式）
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-goog-api-key": api_key.strip()
     }
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -183,50 +185,27 @@ def extract_properties_with_gemini(email_item, api_key):
         }
     }
 
+    # 2. data引数を渡して確実にPOST送信にする
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers=headers,
-        method="POST"
+        headers=headers
     )
 
+    # 3. リクエスト実行とエラーボディの詳細出力
     try:
-        with urllib.request.urlopen(req, timeout=30) as response:
-            res_data = json.loads(response.read().decode("utf-8"))
-            raw_text = res_data["candidates"][0]["content"]["parts"][0]["text"]
-            items = json.loads(raw_text)
-
-            parsed_props = []
-            for it in items:
-                name = clean_text(it.get("name", ""))
-                ward = it.get("ward", "")
-                price = int(it.get("price", 0))
-                area = float(it.get("area", 0.0))
-                prev_p = it.get("previous_price")
-                prev_p = int(prev_p) if prev_p else None
-
-                if not name or ward not in TARGET_WARDS or price <= 0 or area <= 0:
-                    continue
-
-                drop = None
-                rate = None
-                if prev_p and prev_p > price:
-                    drop = prev_p - price
-                    rate = -round((drop / prev_p) * 100, 1)
-
-                parsed_props.append({
-                    "name": name,
-                    "ward": ward,
-                    "price": price,
-                    "previous_price": prev_p,
-                    "price_drop": drop,
-                    "gap_rate": rate,
-                    "area": area,
-                    "source": email_item["source"]
-                })
-            return parsed_props
+        with urllib.request.urlopen(req) as res:
+            res_data = json.loads(res.read().decode("utf-8"))
+            text = res_data["candidates"][0]["content"]["parts"][0]["text"]
+            return json.loads(text)
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode("utf-8")
+        print(f"=== Gemini API HTTPエラー ({email_item.get('source', '')}) ===")
+        print(f"Status Code: {e.code}")
+        print(f"Error Body: {error_body}")
+        return []
     except Exception as e:
-        print(f"Gemini API抽出エラー ({email_item['source']}): {e}")
+        print(f"Gemini API抽出エラー ({email_item.get('source', '')}): {e}")
         return []
 
 def parse_and_screen(emails_data, api_key):
