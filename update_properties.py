@@ -235,7 +235,7 @@ def parse_and_screen(emails_data, api_key):
             name = p["name"]
             price = p["price"]
             area = p["area"]
-            source = p["source"]
+            source = p.get("source", "不明")
 
             # 実需フィルター（40㎡未満、5,000万円未満の除外）
             if area < 40:
