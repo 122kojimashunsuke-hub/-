@@ -172,7 +172,7 @@ def extract_properties_with_gemini(email_item, api_key):
 """
 
 # 1. URLとヘッダーの設定（ヘッダーで安全にAPIキーを渡す方式）
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent"
     headers = {
         "Content-Type": "application/json",
         "x-goog-api-key": api_key.strip()
