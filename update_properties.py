@@ -1,3 +1,4 @@
+import time
 import os
 import json
 import re
@@ -171,6 +172,9 @@ def extract_properties_with_gemini(email_item, api_key):
 {email_item['text'][:6000]}
 """
 
+# 1通ごとに15秒待機してAPIの速度制限（1分間に5回）を回避する
+    time.sleep(15)
+    
 # 1. URLとヘッダーの設定（ヘッダーで安全にAPIキーを渡す方式）
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
     headers = {
