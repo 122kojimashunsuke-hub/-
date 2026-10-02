@@ -286,7 +286,7 @@ def parse_and_screen(emails_data, api_key):
                 "ward": ward,
                 "price": price,
                 "previous_price": p["previous_price"],
-                "price_drop": p["price_drop"],
+                "price_drop": p.get("price_drop", "不明"),
                 "gap_rate": p["gap_rate"],
                 "area": area,
                 "tsubo_price": tsubo_price,
