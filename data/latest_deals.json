@@ -1,11 +1,56 @@
 {
-  "updated_at": "2026-10-02 13:09",
+  "updated_at": "2026-10-02 22:08",
   "stats": {
-    "total_detected": 0,
+    "total_detected": 3,
     "excluded_conditions": 0,
-    "recommended": 0,
-    "by_source": {}
+    "recommended": 3,
+    "by_source": {
+      "住友ステップ": 3
+    }
   },
-  "properties": [],
+  "properties": [
+    {
+      "name": "ザ・タワーズ台場＜ＴＨＥ　ＴＯＷＥＲＳ　ＤＡＩＢＡ＞",
+      "ward": "港区",
+      "price": 13500,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 74.21,
+      "tsubo_price": 601.4,
+      "deal_line": "1億2,690万円〜1億2,960万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%BA%E5%8F%B0%E5%A0%B4%EF%BC%9C%EF%BC%B4%EF%BC%A8%EF%BC%A5%E3%80%80%EF%BC%B4%EF%BC%AF%EF%BC%B7%EF%BC%A5%EF%BC%B2%EF%BC%B3%E3%80%80%EF%BC%A4%EF%BC%A1%EF%BC%A9%EF%BC%A2%EF%BC%A1%EF%BC%9E",
+      "source": "不明",
+      "detected_at": "10/02 22:04"
+    },
+    {
+      "name": "シティタワー品川",
+      "ward": "港区",
+      "price": 12800,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 88.43,
+      "tsubo_price": 478.5,
+      "deal_line": "1億2,030万円〜1億2,280万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E5%93%81%E5%B7%9D",
+      "source": "不明",
+      "detected_at": "10/02 22:04"
+    },
+    {
+      "name": "プレミスト東銀座築地ＥｄｇｅＣｏｕｒｔ",
+      "ward": "中央区",
+      "price": 19000,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 50.12,
+      "tsubo_price": 1253.2,
+      "deal_line": "1億7,860万円〜1億8,240万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%97%E3%83%AC%E3%83%9F%E3%82%B9%E3%83%88%E6%9D%B1%E9%8A%80%E5%BA%A7%E7%AF%89%E5%9C%B0%EF%BC%A5%EF%BD%84%EF%BD%87%EF%BD%85%EF%BC%A3%EF%BD%8F%EF%BD%95%EF%BD%92%EF%BD%94",
+      "source": "不明",
+      "detected_at": "10/02 22:04"
+    }
+  ],
   "excluded": []
 }
