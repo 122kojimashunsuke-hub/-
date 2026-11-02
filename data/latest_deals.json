@@ -1,15 +1,197 @@
 {
-  "updated_at": "2026-11-01 01:32",
+  "updated_at": "2026-11-02 02:08",
   "stats": {
-    "total_detected": 48,
-    "excluded_conditions": 0,
-    "recommended": 48,
+    "total_detected": 73,
+    "excluded_conditions": 3,
+    "recommended": 70,
     "by_source": {
-      "三井のリハウス": 30,
-      "住友ステップ": 18
+      "三井のリハウス": 60,
+      "住友ステップ": 13
     }
   },
   "properties": [
+    {
+      "name": "ザ・パークハウス麹町レジデンス",
+      "ward": "千代田区",
+      "price": 15900,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 51.75,
+      "tsubo_price": 1015.7,
+      "deal_line": "1億4,940万円〜1億5,260万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%82%B6%E3%83%BB%E3%83%91%E3%83%BC%E3%82%AF%E3%83%8F%E3%82%A6%E3%82%B9%E9%BA%B9%E7%94%BA%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "勝どきザ・タワー",
+      "ward": "中央区",
+      "price": 9480,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 59.92,
+      "tsubo_price": 523.0,
+      "deal_line": "8,910万円〜9,100万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "メイクスデザイン茅場町",
+      "ward": "中央区",
+      "price": 9980,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 65.88,
+      "tsubo_price": 500.8,
+      "deal_line": "9,380万円〜9,580万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%B9%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E8%8C%85%E5%A0%B4%E7%94%BA",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "キャピタルゲートプレイスザ・タワー",
+      "ward": "中央区",
+      "price": 14900,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 76.02,
+      "tsubo_price": 647.9,
+      "deal_line": "1億4,000万円〜1億4,300万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%AD%E3%83%A3%E3%83%94%E3%82%BF%E3%83%AB%E3%82%B2%E3%83%BC%E3%83%88%E3%83%97%E3%83%AC%E3%82%A4%E3%82%B9%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "グランドシティタワー月島",
+      "ward": "中央区",
+      "price": 24500,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 78.95,
+      "tsubo_price": 1025.9,
+      "deal_line": "2億3,030万円〜2億3,520万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E6%9C%88%E5%B3%B6",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "パークタワー晴海",
+      "ward": "中央区",
+      "price": 13850,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 69.25,
+      "tsubo_price": 661.2,
+      "deal_line": "1億3,010万円〜1億3,290万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E6%99%B4%E6%B5%B7",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "HARUMI FLAG SUN VILLAGE B棟",
+      "ward": "中央区",
+      "price": 16200,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 83.84,
+      "tsubo_price": 638.8,
+      "deal_line": "1億5,220万円〜1億5,550万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20B%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "HARUMI FLAG PARK VILLAGE T棟",
+      "ward": "中央区",
+      "price": 12780,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 74.33,
+      "tsubo_price": 568.4,
+      "deal_line": "1億2,010万円〜1億2,260万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20PARK%20VILLAGE%20T%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:13"
+    },
+    {
+      "name": "ブリリアタワー東京",
+      "ward": "墨田区",
+      "price": 10480,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 57.07,
+      "tsubo_price": 607.1,
+      "deal_line": "9,850万円〜1億60万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%A2%A8%E7%94%B0%E5%8C%BA%20%E3%83%96%E3%83%AA%E3%83%AA%E3%82%A2%E3%82%BF%E3%83%AF%E3%83%BC%E6%9D%B1%E4%BA%AC",
+      "source": "不明",
+      "detected_at": "11/02 01:14"
+    },
+    {
+      "name": "シティタワーズ東京ベイ　ウエストタワー",
+      "ward": "江東区",
+      "price": 9790,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 56.17,
+      "tsubo_price": 576.2,
+      "deal_line": "9,200万円〜9,390万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B1%9F%E6%9D%B1%E5%8C%BA%20%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%BA%E6%9D%B1%E4%BA%AC%E3%83%99%E3%82%A4%E3%80%80%E3%82%A6%E3%82%A8%E3%82%B9%E3%83%88%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:14"
+    },
+    {
+      "name": "シティタワー武蔵小山",
+      "ward": "品川区",
+      "price": 14980,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 57.41,
+      "tsubo_price": 862.6,
+      "deal_line": "1億4,080万円〜1億4,380万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%93%81%E5%B7%9D%E5%8C%BA%20%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E6%AD%A6%E8%94%B5%E5%B0%8F%E5%B1%B1",
+      "source": "不明",
+      "detected_at": "11/02 01:14"
+    },
+    {
+      "name": "ルピナス中野レジデンス",
+      "ward": "中野区",
+      "price": 6780,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 54.19,
+      "tsubo_price": 413.6,
+      "deal_line": "6,370万円〜6,500万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E9%87%8E%E5%8C%BA%20%E3%83%AB%E3%83%94%E3%83%8A%E3%82%B9%E4%B8%AD%E9%87%8E%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
+      "source": "不明",
+      "detected_at": "11/02 01:14"
+    },
+    {
+      "name": "ライオンズマンション渋谷道玄坂",
+      "ward": "渋谷区",
+      "price": 13600,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 65.33,
+      "tsubo_price": 688.2,
+      "deal_line": "1億2,780万円〜1億3,050万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3%E3%82%BA%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3%E6%B8%8B%E8%B0%B7%E9%81%93%E7%8E%84%E5%9D%82",
+      "source": "不明",
+      "detected_at": "11/02 01:14"
+    },
     {
       "name": "パークコート四番町",
       "ward": "千代田区",
@@ -22,7 +204,7 @@
       "deal_line": "5億6,210万円〜5億7,400万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%B3%E3%83%BC%E3%83%88%E5%9B%9B%E7%95%AA%E7%94%BA",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "THE TOKYO TOWERS SEA TOWER",
@@ -36,7 +218,7 @@
       "deal_line": "2億2,370万円〜2億2,840万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20THE%20TOKYO%20TOWERS%20SEA%20TOWER",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "グランドシティタワー月島",
@@ -50,7 +232,7 @@
       "deal_line": "2億7,070万円〜2億7,640万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E6%9C%88%E5%B3%B6",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "THE TOYOMI TOWER 西ウイング",
@@ -64,7 +246,7 @@
       "deal_line": "4億7,750万円〜4億8,760万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20THE%20TOYOMI%20TOWER%20%E8%A5%BF%E3%82%A6%E3%82%A4%E3%83%B3%E3%82%B0",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "セザールスカイリバー",
@@ -78,7 +260,7 @@
       "deal_line": "9,390万円〜9,590万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%BB%E3%82%B6%E3%83%BC%E3%83%AB%E3%82%B9%E3%82%AB%E3%82%A4%E3%83%AA%E3%83%90%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "日本橋浜町ダイヤレジデンス",
@@ -92,7 +274,7 @@
       "deal_line": "1億1,270万円〜1億1,510万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E6%97%A5%E6%9C%AC%E6%A9%8B%E6%B5%9C%E7%94%BA%E3%83%80%E3%82%A4%E3%83%A4%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "ファミール日本橋グランスイートプラザ",
@@ -106,7 +288,7 @@
       "deal_line": "1億6,910万円〜1億7,270万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%95%E3%82%A1%E3%83%9F%E3%83%BC%E3%83%AB%E6%97%A5%E6%9C%AC%E6%A9%8B%E3%82%B0%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%A4%E3%83%BC%E3%83%88%E3%83%97%E3%83%A9%E3%82%B6",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "HARUMI FLAG PARK VILLAGE T棟",
@@ -120,7 +302,7 @@
       "deal_line": "1億3,420万円〜1億3,700万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20PARK%20VILLAGE%20T%E6%A3%9F",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "HARUMI FLAG SUN VILLAGE T棟",
@@ -134,7 +316,7 @@
       "deal_line": "1億2,680万円〜1億2,950万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20T%E6%A3%9F",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
       "name": "HARUMI FLAG SUN VILLAGE T棟",
@@ -148,147 +330,273 @@
       "deal_line": "1億5,460万円〜1億5,790万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20T%E6%A3%9F",
       "source": "不明",
-      "detected_at": "11/01 00:38"
+      "detected_at": "11/02 01:16"
     },
     {
-      "name": "エステムコートグラン吉祥寺",
-      "ward": "練馬区",
-      "price": 8980,
+      "name": "プラウド千代田淡路町",
+      "ward": "千代田区",
+      "price": 9980,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 70.87,
-      "tsubo_price": 418.9,
-      "deal_line": "8,440万円〜8,620万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E7%B7%B4%E9%A6%AC%E5%8C%BA%20%E3%82%A8%E3%82%B9%E3%83%86%E3%83%A0%E3%82%B3%E3%83%BC%E3%83%88%E3%82%B0%E3%83%A9%E3%83%B3%E5%90%89%E7%A5%A5%E5%AF%BA",
+      "area": 40.43,
+      "tsubo_price": 816.0,
+      "deal_line": "9,380万円〜9,580万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%97%E3%83%A9%E3%82%A6%E3%83%89%E5%8D%83%E4%BB%A3%E7%94%B0%E6%B7%A1%E8%B7%AF%E7%94%BA",
       "source": "不明",
-      "detected_at": "11/01 00:40"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "ヴェルビュ東十条フロントステージ",
-      "ward": "北区",
-      "price": 7180,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 69.63,
-      "tsubo_price": 340.9,
-      "deal_line": "6,740万円〜6,890万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E5%8C%BA%20%E3%83%B4%E3%82%A7%E3%83%AB%E3%83%93%E3%83%A5%E6%9D%B1%E5%8D%81%E6%9D%A1%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88%E3%82%B9%E3%83%86%E3%83%BC%E3%82%B8",
-      "source": "不明",
-      "detected_at": "11/01 00:40"
-    },
-    {
-      "name": "ライオンズマンション洗足池第２",
-      "ward": "大田区",
-      "price": 6880,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 75.23,
-      "tsubo_price": 302.3,
-      "deal_line": "6,460万円〜6,600万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E7%94%B0%E5%8C%BA%20%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3%E3%82%BA%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3%E6%B4%97%E8%B6%B3%E6%B1%A0%E7%AC%AC%EF%BC%92",
-      "source": "不明",
-      "detected_at": "11/01 00:40"
-    },
-    {
-      "name": "ＨＡＲＵＭＩ　ＦＬＡＧ　ＳＵＮ　ＶＩＬＬＡＧＥ　Ｔ棟",
+      "name": "パークタワー勝どきサウス",
       "ward": "中央区",
-      "price": 11000,
+      "price": 18380,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 49.38,
-      "tsubo_price": 736.4,
-      "deal_line": "1億340万円〜1億560万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%EF%BC%A8%EF%BC%A1%EF%BC%B2%EF%BC%B5%EF%BC%AD%EF%BC%A9%E3%80%80%EF%BC%A6%EF%BC%AC%EF%BC%A1%EF%BC%A7%E3%80%80%EF%BC%B3%EF%BC%B5%EF%BC%AE%E3%80%80%EF%BC%B6%EF%BC%A9%EF%BC%AC%EF%BC%AC%EF%BC%A1%EF%BC%A7%EF%BC%A5%E3%80%80%EF%BC%B4%E6%A3%9F",
+      "area": 67.72,
+      "tsubo_price": 897.2,
+      "deal_line": "1億7,270万円〜1億7,640万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B5%E3%82%A6%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:40"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "セザール御殿山",
-      "ward": "品川区",
-      "price": 6180,
+      "name": "パークタワー勝どきミッド",
+      "ward": "中央区",
+      "price": 23800,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 45.18,
-      "tsubo_price": 452.2,
-      "deal_line": "5,800万円〜5,930万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%93%81%E5%B7%9D%E5%8C%BA%20%E3%82%BB%E3%82%B6%E3%83%BC%E3%83%AB%E5%BE%A1%E6%AE%BF%E5%B1%B1",
+      "area": 81.42,
+      "tsubo_price": 966.3,
+      "deal_line": "2億2,370万円〜2億2,840万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%83%9F%E3%83%83%E3%83%89",
       "source": "不明",
-      "detected_at": "11/01 00:40"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "パシフィックハウス豊町",
-      "ward": "品川区",
-      "price": 10980,
+      "name": "パークタワー勝どきサウス",
+      "ward": "中央区",
+      "price": 14680,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 65.58,
-      "tsubo_price": 553.5,
-      "deal_line": "1億320万円〜1億540万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%93%81%E5%B7%9D%E5%8C%BA%20%E3%83%91%E3%82%B7%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%83%8F%E3%82%A6%E3%82%B9%E8%B1%8A%E7%94%BA",
+      "area": 47.21,
+      "tsubo_price": 1027.9,
+      "deal_line": "1億3,790万円〜1億4,090万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B5%E3%82%A6%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:44"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "藤和シティホームズ西巣鴨",
-      "ward": "豊島区",
-      "price": 7990,
+      "name": "パークタワー勝どきミッド",
+      "ward": "中央区",
+      "price": 12400,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 65.93,
-      "tsubo_price": 400.6,
-      "deal_line": "7,510万円〜7,670万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E8%B1%8A%E5%B3%B6%E5%8C%BA%20%E8%97%A4%E5%92%8C%E3%82%B7%E3%83%86%E3%82%A3%E3%83%9B%E3%83%BC%E3%83%A0%E3%82%BA%E8%A5%BF%E5%B7%A3%E9%B4%A8",
+      "area": 50.01,
+      "tsubo_price": 819.7,
+      "deal_line": "1億1,650万円〜1億1,900万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%83%9F%E3%83%83%E3%83%89",
       "source": "不明",
-      "detected_at": "11/01 00:44"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "クレヴィア練馬中村橋",
-      "ward": "練馬区",
-      "price": 5480,
+      "name": "パークタワー勝どきサウス",
+      "ward": "中央区",
+      "price": 23550,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 42.45,
-      "tsubo_price": 426.8,
-      "deal_line": "5,150万円〜5,260万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E7%B7%B4%E9%A6%AC%E5%8C%BA%20%E3%82%AF%E3%83%AC%E3%83%B4%E3%82%A3%E3%82%A2%E7%B7%B4%E9%A6%AC%E4%B8%AD%E6%9D%91%E6%A9%8B",
+      "area": 75.31,
+      "tsubo_price": 1033.7,
+      "deal_line": "2億2,130万円〜2億2,600万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B5%E3%82%A6%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:44"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "藤和シティホームズ小竹向原",
-      "ward": "板橋区",
-      "price": 7280,
+      "name": "勝どきザ・タワー",
+      "ward": "中央区",
+      "price": 14280,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 72.19,
-      "tsubo_price": 333.4,
-      "deal_line": "6,840万円〜6,980万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%9D%BF%E6%A9%8B%E5%8C%BA%20%E8%97%A4%E5%92%8C%E3%82%B7%E3%83%86%E3%82%A3%E3%83%9B%E3%83%BC%E3%83%A0%E3%82%BA%E5%B0%8F%E7%AB%B9%E5%90%91%E5%8E%9F",
+      "area": 72.09,
+      "tsubo_price": 654.8,
+      "deal_line": "1億3,420万円〜1億3,700万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:44"
+      "detected_at": "11/02 01:21"
     },
     {
-      "name": "ゼファー目白ビアージュ",
-      "ward": "新宿区",
-      "price": 8499,
+      "name": "ルミネ東京ベイフロント",
+      "ward": "中央区",
+      "price": 10580,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 55.07,
-      "tsubo_price": 510.2,
+      "area": 64.59,
+      "tsubo_price": 541.5,
+      "deal_line": "9,940万円〜1億150万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%AB%E3%83%9F%E3%83%8D%E6%9D%B1%E4%BA%AC%E3%83%99%E3%82%A4%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88",
+      "source": "不明",
+      "detected_at": "11/02 01:21"
+    },
+    {
+      "name": "THE TOKYO TOWERS MID TOWER",
+      "ward": "中央区",
+      "price": 13999,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 73.94,
+      "tsubo_price": 625.9,
+      "deal_line": "1億3,150万円〜1億3,430万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20THE%20TOKYO%20TOWERS%20MID%20TOWER",
+      "source": "不明",
+      "detected_at": "11/02 01:21"
+    },
+    {
+      "name": "東京レジデンス",
+      "ward": "千代田区",
+      "price": 26980,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 85.82,
+      "tsubo_price": 1039.3,
+      "deal_line": "2億5,360万円〜2億5,900万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E6%9D%B1%E4%BA%AC%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "パークタワー勝どきミッド",
+      "ward": "中央区",
+      "price": 26500,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 81.43,
+      "tsubo_price": 1075.8,
+      "deal_line": "2億4,910万円〜2億5,440万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%83%9F%E3%83%83%E3%83%89",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "プラネ勝どき",
+      "ward": "中央区",
+      "price": 9298,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 57.7,
+      "tsubo_price": 532.7,
+      "deal_line": "8,740万円〜8,920万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%97%E3%83%A9%E3%83%8D%E5%8B%9D%E3%81%A9%E3%81%8D",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "勝どきザ・タワー",
+      "ward": "中央区",
+      "price": 24990,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 90.57,
+      "tsubo_price": 912.1,
+      "deal_line": "2億3,490万円〜2億3,990万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "勝どきザ・タワー",
+      "ward": "中央区",
+      "price": 11980,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 58.98,
+      "tsubo_price": 671.5,
+      "deal_line": "1億1,260万円〜1億1,500万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "THE TOKYO TOWERS SEA TOWER",
+      "ward": "中央区",
+      "price": 41800,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 135.7,
+      "tsubo_price": 1018.3,
+      "deal_line": "3億9,290万円〜4億120万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20THE%20TOKYO%20TOWERS%20SEA%20TOWER",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "ザ・パークハウス日本橋大伝馬町",
+      "ward": "中央区",
+      "price": 11990,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 50.94,
+      "tsubo_price": 778.1,
+      "deal_line": "1億1,270万円〜1億1,510万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%B6%E3%83%BB%E3%83%91%E3%83%BC%E3%82%AF%E3%83%8F%E3%82%A6%E3%82%B9%E6%97%A5%E6%9C%AC%E6%A9%8B%E5%A4%A7%E4%BC%9D%E9%A6%AC%E7%94%BA",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "エクセルシオール日本橋",
+      "ward": "中央区",
+      "price": 8498,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 46.22,
+      "tsubo_price": 607.8,
       "deal_line": "7,980万円〜8,150万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%AE%BF%E5%8C%BA%20%E3%82%BC%E3%83%95%E3%82%A1%E3%83%BC%E7%9B%AE%E7%99%BD%E3%83%93%E3%82%A2%E3%83%BC%E3%82%B8%E3%83%A5",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%A8%E3%82%AF%E3%82%BB%E3%83%AB%E3%82%B7%E3%82%AA%E3%83%BC%E3%83%AB%E6%97%A5%E6%9C%AC%E6%A9%8B",
       "source": "不明",
-      "detected_at": "11/01 00:44"
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "ベイサイドタワー晴海",
+      "ward": "中央区",
+      "price": 12880,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 57.2,
+      "tsubo_price": 744.4,
+      "deal_line": "1億2,100万円〜1億2,360万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%99%E3%82%A4%E3%82%B5%E3%82%A4%E3%83%89%E3%82%BF%E3%83%AF%E3%83%BC%E6%99%B4%E6%B5%B7",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
+    },
+    {
+      "name": "HARUMI FLAG SUN VILLAGE T棟",
+      "ward": "中央区",
+      "price": 15500,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 62.56,
+      "tsubo_price": 819.0,
+      "deal_line": "1億4,570万円〜1億4,880万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20T%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:27"
     },
     {
       "name": "プレミスト赤坂檜町公園",
@@ -302,7 +610,7 @@
       "deal_line": "1億8,420万円〜1億8,810万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%83%97%E3%83%AC%E3%83%9F%E3%82%B9%E3%83%88%E8%B5%A4%E5%9D%82%E6%AA%9C%E7%94%BA%E5%85%AC%E5%9C%92",
       "source": "不明",
-      "detected_at": "11/01 00:50"
+      "detected_at": "11/02 01:30"
     },
     {
       "name": "芝浦アイランドケープタワー",
@@ -316,7 +624,7 @@
       "deal_line": "2億3,490万円〜2億3,990万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E8%8A%9D%E6%B5%A6%E3%82%A2%E3%82%A4%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B1%E3%83%BC%E3%83%97%E3%82%BF%E3%83%AF%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:54"
+      "detected_at": "11/02 01:31"
     },
     {
       "name": "ディアナコート文京本郷台",
@@ -330,7 +638,7 @@
       "deal_line": "1億5,410万円〜1億5,740万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%96%87%E4%BA%AC%E5%8C%BA%20%E3%83%87%E3%82%A3%E3%82%A2%E3%83%8A%E3%82%B3%E3%83%BC%E3%83%88%E6%96%87%E4%BA%AC%E6%9C%AC%E9%83%B7%E5%8F%B0",
       "source": "不明",
-      "detected_at": "11/01 00:54"
+      "detected_at": "11/02 01:31"
     },
     {
       "name": "ワテラスタワーレジデンス",
@@ -344,7 +652,7 @@
       "deal_line": "3億1,860万円〜3億2,540万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%AF%E3%83%86%E3%83%A9%E3%82%B9%E3%82%BF%E3%83%AF%E3%83%BC%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "HARUMI FLAG PARK VILLAGE A棟",
@@ -358,7 +666,7 @@
       "deal_line": "2億8,180万円〜2億8,780万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20PARK%20VILLAGE%20A%E6%A3%9F",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "東京ツインパークス レフトウィング",
@@ -372,7 +680,7 @@
       "deal_line": "1億2,850万円〜1億3,130万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E6%9D%B1%E4%BA%AC%E3%83%84%E3%82%A4%E3%83%B3%E3%83%91%E3%83%BC%E3%82%AF%E3%82%B9%20%E3%83%AC%E3%83%95%E3%83%88%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%B0",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "ソフトタウン南青山",
@@ -386,7 +694,7 @@
       "deal_line": "9,210万円〜9,400万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%82%BD%E3%83%95%E3%83%88%E3%82%BF%E3%82%A6%E3%83%B3%E5%8D%97%E9%9D%92%E5%B1%B1",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "パークタワー西新宿",
@@ -400,7 +708,7 @@
       "deal_line": "1億4,750万円〜1億5,070万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%AE%BF%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E8%A5%BF%E6%96%B0%E5%AE%BF",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "ベルク両国",
@@ -414,7 +722,7 @@
       "deal_line": "7,330万円〜7,480万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%A2%A8%E7%94%B0%E5%8C%BA%20%E3%83%99%E3%83%AB%E3%82%AF%E4%B8%A1%E5%9B%BD",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "Brilliaタワー東京",
@@ -428,7 +736,7 @@
       "deal_line": "1億5,030万円〜1億5,350万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%A2%A8%E7%94%B0%E5%8C%BA%20Brillia%E3%82%BF%E3%83%AF%E3%83%BC%E6%9D%B1%E4%BA%AC",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "ソプラタワー",
@@ -442,7 +750,7 @@
       "deal_line": "1億4,090万円〜1億4,390万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E7%9B%AE%E9%BB%92%E5%8C%BA%20%E3%82%BD%E3%83%97%E3%83%A9%E3%82%BF%E3%83%AF%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "エルザ世田谷",
@@ -456,7 +764,7 @@
       "deal_line": "9,110万円〜9,310万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%96%E7%94%B0%E8%B0%B7%E5%8C%BA%20%E3%82%A8%E3%83%AB%E3%82%B6%E4%B8%96%E7%94%B0%E8%B0%B7",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "渋谷神山町レジデンス",
@@ -470,7 +778,7 @@
       "deal_line": "1億40万円〜1億260万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%8B%E8%B0%B7%E5%8C%BA%20%E6%B8%8B%E8%B0%B7%E7%A5%9E%E5%B1%B1%E7%94%BA%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:35"
     },
     {
       "name": "ワールドシティタワーズ　キャピタルタワー",
@@ -484,7 +792,7 @@
       "deal_line": "1億5,590万円〜1億5,920万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%83%AF%E3%83%BC%E3%83%AB%E3%83%89%E3%82%B7%E3%83%86%E3%82%A3%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%BA%E3%80%80%E3%82%AD%E3%83%A3%E3%83%94%E3%82%BF%E3%83%AB%E3%82%BF%E3%83%AF%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:36"
     },
     {
       "name": "パークタワー勝どきサウス",
@@ -498,7 +806,7 @@
       "deal_line": "1億5,960万円〜1億6,300万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B5%E3%82%A6%E3%82%B9",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:36"
     },
     {
       "name": "オープンレジデンシア西片",
@@ -512,7 +820,7 @@
       "deal_line": "1億320万円〜1億540万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%96%87%E4%BA%AC%E5%8C%BA%20%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%83%AC%E3%82%B8%E3%83%87%E3%83%B3%E3%82%B7%E3%82%A2%E8%A5%BF%E7%89%87",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:36"
     },
     {
       "name": "ルジェンテ浅草アベニュー",
@@ -526,7 +834,7 @@
       "deal_line": "9,220万円〜9,410万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E6%9D%B1%E5%8C%BA%20%E3%83%AB%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%86%E6%B5%85%E8%8D%89%E3%82%A2%E3%83%99%E3%83%8B%E3%83%A5%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:36"
     },
     {
       "name": "ベイサイドタワー晴海",
@@ -540,148 +848,173 @@
       "deal_line": "1億1,750万円〜1億2,000万円",
       "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%99%E3%82%A4%E3%82%B5%E3%82%A4%E3%83%89%E3%82%BF%E3%83%AF%E3%83%BC%E6%99%B4%E6%B5%B7",
       "source": "不明",
-      "detected_at": "11/01 00:58"
+      "detected_at": "11/02 01:36"
     },
     {
-      "name": "一番町マナーハウス",
+      "name": "Brillia一番町",
       "ward": "千代田区",
-      "price": 44800,
+      "price": 34900,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 117.95,
-      "tsubo_price": 1255.6,
-      "deal_line": "4億2,110万円〜4億3,000万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E4%B8%80%E7%95%AA%E7%94%BA%E3%83%9E%E3%83%8A%E3%83%BC%E3%83%8F%E3%82%A6%E3%82%B9",
+      "area": 91.21,
+      "tsubo_price": 1264.9,
+      "deal_line": "3億2,800万円〜3億3,500万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20Brillia%E4%B8%80%E7%95%AA%E7%94%BA",
       "source": "不明",
-      "detected_at": "11/01 01:01"
+      "detected_at": "11/02 01:45"
     },
     {
-      "name": "リビオレゾン大手町",
-      "ward": "千代田区",
-      "price": 11990,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 50.15,
-      "tsubo_price": 790.4,
-      "deal_line": "1億1,270万円〜1億1,510万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%AA%E3%83%93%E3%82%AA%E3%83%AC%E3%82%BE%E3%83%B3%E5%A4%A7%E6%89%8B%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "プラウド九段南",
-      "ward": "千代田区",
-      "price": 18200,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 60.69,
-      "tsubo_price": 991.4,
-      "deal_line": "1億7,100万円〜1億7,470万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%97%E3%83%A9%E3%82%A6%E3%83%89%E4%B9%9D%E6%AE%B5%E5%8D%97",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "ホーマット三番町",
-      "ward": "千代田区",
-      "price": 32980,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 89.21,
-      "tsubo_price": 1222.1,
-      "deal_line": "3億1,000万円〜3億1,660万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%9B%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88%E4%B8%89%E7%95%AA%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "パレスサイド三番町",
-      "ward": "千代田区",
-      "price": 36800,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 120.31,
-      "tsubo_price": 1011.2,
-      "deal_line": "3億4,590万円〜3億5,320万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%83%91%E3%83%AC%E3%82%B9%E3%82%B5%E3%82%A4%E3%83%89%E4%B8%89%E7%95%AA%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "Brillia二番町",
-      "ward": "千代田区",
-      "price": 37500,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 90.53,
-      "tsubo_price": 1369.3,
-      "deal_line": "3億5,250万円〜3億6,000万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20Brillia%E4%BA%8C%E7%95%AA%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "Brillia二番町",
-      "ward": "千代田区",
-      "price": 19900,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 55.02,
-      "tsubo_price": 1195.7,
-      "deal_line": "1億8,700万円〜1億9,100万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20Brillia%E4%BA%8C%E7%95%AA%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "グランフォルム六番町",
-      "ward": "千代田区",
-      "price": 22990,
-      "previous_price": null,
-      "price_drop": "不明",
-      "gap_rate": "不明",
-      "area": 75.33,
-      "tsubo_price": 1008.9,
-      "deal_line": "2億1,610万円〜2億2,070万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA%20%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%95%E3%82%A9%E3%83%AB%E3%83%A0%E5%85%AD%E7%95%AA%E7%94%BA",
-      "source": "不明",
-      "detected_at": "11/01 01:01"
-    },
-    {
-      "name": "パークタワー勝どきサウス",
+      "name": "勝どきザ・タワー",
       "ward": "中央区",
-      "price": 39800,
+      "price": 12650,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 106.15,
-      "tsubo_price": 1239.5,
-      "deal_line": "3億7,410万円〜3億8,200万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B5%E3%82%A6%E3%82%B9",
+      "area": 67.86,
+      "tsubo_price": 616.2,
+      "deal_line": "1億1,890万円〜1億2,140万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E5%8B%9D%E3%81%A9%E3%81%8D%E3%82%B6%E3%83%BB%E3%82%BF%E3%83%AF%E3%83%BC",
       "source": "不明",
-      "detected_at": "11/01 01:01"
+      "detected_at": "11/02 01:45"
     },
     {
-      "name": "THE TOKYO TOWERS SEA TOWER",
+      "name": "セザールリバーサイド月島",
       "ward": "中央区",
-      "price": 24980,
+      "price": 11700,
       "previous_price": null,
       "price_drop": "不明",
       "gap_rate": "不明",
-      "area": 105.86,
-      "tsubo_price": 780.1,
-      "deal_line": "2億3,480万円〜2億3,980万円",
-      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20THE%20TOKYO%20TOWERS%20SEA%20TOWER",
+      "area": 76.36,
+      "tsubo_price": 506.5,
+      "deal_line": "1億990万円〜1億1,230万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%82%BB%E3%82%B6%E3%83%BC%E3%83%AB%E3%83%AA%E3%83%90%E3%83%BC%E3%82%B5%E3%82%A4%E3%83%89%E6%9C%88%E5%B3%B6",
       "source": "不明",
-      "detected_at": "11/01 01:01"
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "T-puente(ティープエンテ)",
+      "ward": "中央区",
+      "price": 12680,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 57.96,
+      "tsubo_price": 723.2,
+      "deal_line": "1億1,910万円〜1億2,170万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20T-puente%28%E3%83%86%E3%82%A3%E3%83%BC%E3%83%97%E3%82%A8%E3%83%B3%E3%83%86%29",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "パークタワー晴海",
+      "ward": "中央区",
+      "price": 13580,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 63.1,
+      "tsubo_price": 711.4,
+      "deal_line": "1億2,760万円〜1億3,030万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC%E6%99%B4%E6%B5%B7",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "HARUMI FLAG SUN VILLAGE T棟",
+      "ward": "中央区",
+      "price": 15800,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 79.53,
+      "tsubo_price": 656.7,
+      "deal_line": "1億4,850万円〜1億5,160万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20T%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "HARUMI FLAG SUN VILLAGE C棟",
+      "ward": "中央区",
+      "price": 13490,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 79.17,
+      "tsubo_price": 563.3,
+      "deal_line": "1億2,680万円〜1億2,950万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20C%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "HARUMI FLAG SUN VILLAGE T棟",
+      "ward": "中央区",
+      "price": 14980,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 74.12,
+      "tsubo_price": 668.1,
+      "deal_line": "1億4,080万円〜1億4,380万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E5%A4%AE%E5%8C%BA%20HARUMI%20FLAG%20SUN%20VILLAGE%20T%E6%A3%9F",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "リビオタワー品川",
+      "ward": "港区",
+      "price": 9999,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 42.51,
+      "tsubo_price": 777.6,
+      "deal_line": "9,390万円〜9,590万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E3%83%AA%E3%83%93%E3%82%AA%E3%82%BF%E3%83%AF%E3%83%BC%E5%93%81%E5%B7%9D",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
+    },
+    {
+      "name": "芝パークタワー",
+      "ward": "港区",
+      "price": 13880,
+      "previous_price": null,
+      "price_drop": "不明",
+      "gap_rate": "不明",
+      "area": 52.88,
+      "tsubo_price": 867.7,
+      "deal_line": "1億3,040万円〜1億3,320万円",
+      "google_map_url": "https://www.google.com/maps/search/?api=1&query=%E6%B8%AF%E5%8C%BA%20%E8%8A%9D%E3%83%91%E3%83%BC%E3%82%AF%E3%82%BF%E3%83%AF%E3%83%BC",
+      "source": "不明",
+      "detected_at": "11/02 01:45"
     }
   ],
-  "excluded": []
+  "excluded": [
+    {
+      "name": "クリオ神田",
+      "ward": "千代田区",
+      "price": 6990,
+      "area": 32.34,
+      "source": "不明",
+      "reason": "専有面積基準外 (32.34㎡ < 40㎡)"
+    },
+    {
+      "name": "グランドシティタワー月島",
+      "ward": "中央区",
+      "price": 9580,
+      "area": 38.69,
+      "source": "不明",
+      "reason": "専有面積基準外 (38.69㎡ < 40㎡)"
+    },
+    {
+      "name": "パークリュクス神田",
+      "ward": "千代田区",
+      "price": 6980,
+      "area": 30.42,
+      "source": "不明",
+      "reason": "専有面積基準外 (30.42㎡ < 40㎡)"
+    }
+  ]
 }
